@@ -1,0 +1,1135 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="非肌肉侵犯性膀胱癌（NMIBC）決策台：依 EAU 2021 風險模型與 AUA/SUO 分層算出低、中、高、極高風險，帶出 re-TURBT 判斷、術後灌注、BCG 誘導與維持排程、BCG 失敗分類與追蹤膀胱鏡排程。">
+<title>NMIBC 決策台</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@600;700&family=Noto+Sans+TC:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: clinical console — masthead + numbered tabs; workspace = guided navigator (left) + layered data sheet (right) */
+:root{
+  --paper:#f3f6f6; --panel:#ffffff; --ink:#152224; --ink-2:#47585b; --ink-3:#788a8d; --line:#d3dddd; --line-2:#e6eded;
+  --accent:#17707f; --accent-ink:#ffffff; --accent-soft:#e0f0f2;
+  --go:#2d7a4c; --go-soft:#e2f1e7; --warn:#946708; --warn-soft:#faf0d9; --stop:#b3372b; --stop-soft:#f8e2de;
+  --f-display:"Noto Serif TC","Songti TC","PMingLiU",serif;
+  --f-body:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --paper:#0e1516; --panel:#162022; --ink:#e3eced; --ink-2:#a2b2b4; --ink-3:#738588; --line:#283537; --line-2:#1e292b;
+  --accent:#6cc3d1; --accent-ink:#082226; --accent-soft:#16313a;
+  --go:#65c48b; --go-soft:#162a1f; --warn:#e4b852; --warn-soft:#2d2612; --stop:#f08a7a; --stop-soft:#381e1a; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --paper:#0e1516; --panel:#162022; --ink:#e3eced; --ink-2:#a2b2b4; --ink-3:#738588; --line:#283537; --line-2:#1e292b;
+  --accent:#6cc3d1; --accent-ink:#082226; --accent-soft:#16313a;
+  --go:#65c48b; --go-soft:#162a1f; --warn:#e4b852; --warn-soft:#2d2612; --stop:#f08a7a; --stop-soft:#381e1a; color-scheme:dark }
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.65}
+.wrap{max-width:1260px;margin:0 auto;padding-inline:20px;padding-block:0 56px}
+@media (max-width:520px){.wrap{padding-inline:16px}}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;font-weight:700;letter-spacing:.01em}
+h1{font-size:clamp(24px,3.2vw,32px);line-height:1.25}
+h3{font-size:16.5px}
+h4{margin:0;font-size:14px;font-weight:700}
+p{margin:0}
+.muted{color:var(--ink-2)} .small{font-size:13px}
+.eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);font-weight:500}
+.masthead{padding-block:28px 0;display:grid;gap:8px}
+.masthead .sub{color:var(--ink-2);max-width:80ch}
+.src{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.src span{font-size:12px;border:1px solid var(--line);border-radius:999px;padding:2px 10px;color:var(--ink-2);background:var(--panel)}
+.tabs{display:flex;gap:4px;margin-top:18px;border-bottom:1px solid var(--line);overflow-x:auto}
+.tab{appearance:none;border:0;background:none;font:inherit;color:var(--ink-2);padding:10px 14px 11px;cursor:pointer;border-bottom:2.5px solid transparent;white-space:nowrap;font-weight:500}
+.tab b{font-family:var(--f-mono);font-weight:500;color:var(--ink-3);margin-right:6px;font-size:13px}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+.tab[aria-selected="true"] b{color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+section.pane{padding-top:18px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px 18px;min-width:0}
+.card>h3{margin-bottom:10px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.stack{display:grid;gap:16px;min-width:0}
+.field{display:grid;gap:4px;min-width:0;align-content:start}
+.field>.flabel{font-size:12.5px;color:var(--ink-2);font-weight:500}
+.field .hint{font-size:11.5px;color:var(--ink-3);line-height:1.4}
+input[type=number],select{font:inherit;font-size:14px;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:7px;padding:6px 8px;min-width:0;max-width:100%}
+input[type=number]{width:104px;font-family:var(--f-mono)}
+select{width:100%}
+.u{font-size:12px;color:var(--ink-3);font-family:var(--f-mono);white-space:nowrap}
+.inl{display:flex;gap:6px;align-items:center}
+.check{display:flex;gap:8px;align-items:flex-start;font-size:14px;cursor:pointer;padding:3px 0;line-height:1.5}
+.check input{margin-top:4px;accent-color:var(--accent);flex:none}
+.check.confirm{font-weight:700;color:var(--accent);border-top:1px dashed var(--line);padding-top:8px;margin-top:4px}
+.btn{appearance:none;font:inherit;font-size:13.5px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:7px;padding:6px 12px;cursor:pointer;font-weight:500}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn.sm{font-size:12.5px;padding:3px 10px}
+.pill{display:inline-block;font-size:11.5px;font-weight:500;border-radius:999px;padding:1px 9px;white-space:nowrap;vertical-align:1px}
+.pill.ev{background:var(--accent-soft);color:var(--accent)}
+.pill.go{background:var(--go-soft);color:var(--go)} .pill.warn{background:var(--warn-soft);color:var(--warn)} .pill.stop{background:var(--stop-soft);color:var(--stop)}
+.pill.mute{background:var(--line-2);color:var(--ink-2)}
+.sample{font-size:12px;color:var(--warn);background:var(--warn-soft);border-radius:999px;padding:1px 10px;font-weight:500}
+.note{font-size:13px;color:var(--ink-2);border-left:3px solid var(--line);padding:4px 0 4px 12px}
+.alert{border-radius:8px;padding:10px 12px;font-size:14px;display:grid;gap:4px}
+.alert.warn{background:var(--warn-soft)} .alert.warn strong{color:var(--warn)}
+.alert.stop{background:var(--stop-soft)} .alert.stop strong{color:var(--stop)}
+.alert.go{background:var(--go-soft)} .alert.go strong{color:var(--go)}
+.alert.info{background:var(--accent-soft)} .alert.info strong{color:var(--accent)}
+ul.plain{margin:6px 0 0;padding-left:18px;display:grid;gap:4px;font-size:14px}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line-2);vertical-align:top}
+th{font-weight:500;color:var(--ink-2);font-size:12.5px;white-space:nowrap}
+.tablebox{overflow-x:auto}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.two{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(0,1fr);gap:18px;align-items:start}
+@media (max-width:1020px){.two{grid-template-columns:minmax(0,1fr)}}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 14px}
+@media (max-width:640px){.grid2{grid-template-columns:minmax(0,1fr)}}
+.sub-h{font-size:12.5px;color:var(--ink-2);font-weight:500;margin:14px 0 6px}
+.sub-h:first-child{margin-top:0}
+
+/* status strip */
+.status{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--paper) 92%,transparent);backdrop-filter:blur(6px);padding:10px 0;border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center}
+.status .kbox{font-family:var(--f-mono);font-size:26px;line-height:1;font-weight:500}
+.status .kbox small{font-size:12px;color:var(--ink-3);margin-left:4px}
+.status .grow{flex:1 1 220px;min-width:0}
+.prog{height:7px;border-radius:4px;background:var(--line-2);overflow:hidden;margin-top:5px}
+.prog i{display:block;height:100%;background:var(--accent);transition:width .25s}
+.lvl{font-size:13px;font-weight:700;border-radius:7px;padding:5px 10px}
+.lvl.emergent{background:var(--stop);color:#fff} .lvl.urgent{background:var(--warn-soft);color:var(--warn)} .lvl.routine{background:var(--go-soft);color:var(--go)} .lvl.unknown,.lvl.none{background:var(--line-2);color:var(--ink-2)}
+
+/* guided asks */
+.ask{border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:9px;padding:11px 13px;display:grid;gap:8px;background:var(--panel)}
+.ask.now{border-left-color:var(--stop)}
+.ask.later{border-left-color:var(--line)}
+.ask .ah{display:flex;gap:8px;align-items:baseline;justify-content:space-between;flex-wrap:wrap}
+.ask .ah h4{font-size:14.5px}
+.ask .why{font-size:13px;color:var(--ink-2)}
+.ask .fields{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:flex-start}
+.ask .fields .field{flex:0 1 auto}
+.ask .fields .field.wide{flex:1 1 260px}
+.ask .checks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 14px;width:100%}
+@media (max-width:640px){.ask .checks{grid-template-columns:minmax(0,1fr)}}
+.ask .acts{display:flex;gap:8px;flex-wrap:wrap}
+.asklist{display:grid;gap:10px}
+details.more>summary{cursor:pointer;font-size:13px;color:var(--ink-2);padding:4px 0}
+.pend{display:flex;justify-content:space-between;gap:8px;align-items:center;font-size:13.5px;padding:5px 0;border-bottom:1px dashed var(--line-2)}
+
+/* ddx */
+.dx{border:1px solid var(--line-2);border-radius:8px;padding:9px 12px;display:grid;gap:4px}
+.dx .dh{display:flex;justify-content:space-between;gap:8px;align-items:baseline;flex-wrap:wrap}
+.dx .dh b{font-size:14.5px}
+.dx ul{margin:0;padding-left:18px;font-size:13px;color:var(--ink-2)}
+.dx .nx{font-size:12.8px;color:var(--accent)}
+.dx.confirmed{border-color:var(--go);box-shadow:0 0 0 1px var(--go) inset}
+.dx.likely{border-color:var(--accent)}
+.dx.unlikely{opacity:.62}
+.dxlist{display:grid;gap:8px}
+.final{border-radius:10px;padding:12px 14px;background:var(--go-soft)}
+.final b{color:var(--go);font-size:16px}
+
+/* data sheet */
+details.layer{border:1px solid var(--line);border-radius:10px;background:var(--panel)}
+details.layer+details.layer{margin-top:10px}
+details.layer>summary{list-style:none;cursor:pointer;padding:11px 14px;display:flex;gap:10px;align-items:center}
+details.layer>summary::-webkit-details-marker{display:none}
+details.layer>summary .n{font-family:var(--f-mono);color:var(--accent);font-weight:500;min-width:1.4ch}
+details.layer>summary .t{font-weight:700;flex:1}
+details.layer .lb{padding:2px 14px 14px;display:grid;gap:10px}
+.flash{animation:flash 1.2s ease}
+@keyframes flash{0%{box-shadow:0 0 0 3px var(--accent)}100%{box-shadow:0 0 0 0 transparent}}
+
+/* path */
+ol.path{margin:0;padding:0;list-style:none;display:grid;gap:0}
+ol.path li{display:grid;grid-template-columns:22px minmax(0,1fr);gap:8px;padding:6px 0;font-size:13.8px;border-bottom:1px dashed var(--line-2)}
+ol.path li i{font-style:normal;font-family:var(--f-mono);font-size:12px;width:20px;height:20px;border-radius:50%;display:grid;place-items:center;background:var(--line-2);color:var(--ink-3);margin-top:1px}
+ol.path li.done i{background:var(--go-soft);color:var(--go)}
+ol.path li.now i{background:var(--accent);color:var(--accent-ink)}
+ol.path li .pl{color:var(--ink-3);font-size:12.5px}
+
+/* treatment */
+.tx h4{margin:12px 0 4px;font-size:14px;color:var(--accent)}
+.tx h4:first-child{margin-top:0}
+.order{font-family:var(--f-mono);font-size:12.8px;background:var(--paper);border-radius:6px;padding:7px 10px;margin-top:6px;line-height:1.6}
+.bdr{display:flex;gap:12px;flex-wrap:wrap;margin-top:6px}
+.bdr .m{border:1px solid var(--line-2);border-radius:8px;padding:7px 12px;background:var(--paper);min-width:120px}
+.bdr .m .k{font-size:12px;color:var(--ink-2)}
+.bdr .m .v{font-family:var(--f-mono);font-size:19px}
+
+/* algorithm */
+.tree,.tree ul{list-style:none;margin:0;padding:0}
+.tree ul{padding-left:22px;border-left:1.5px solid var(--line);margin-left:9px}
+.tree li{position:relative;padding:4px 0 4px 12px}
+.tree ul>li::before{content:"";position:absolute;left:-1px;top:17px;width:11px;border-top:1.5px solid var(--line)}
+.tree .nd{display:inline-block;border:1px solid var(--line);border-radius:8px;padding:5px 10px;background:var(--panel);font-size:13.8px;max-width:100%}
+.tree .nd small{display:block;color:var(--ink-3);font-size:12px}
+.tree .nd.on{border-color:var(--accent);background:var(--accent-soft);box-shadow:0 0 0 1px var(--accent) inset}
+.tree .nd.on b{color:var(--accent)}
+
+.log{font-size:12.8px;max-height:220px;overflow:auto;display:grid;gap:2px}
+.log div{display:grid;grid-template-columns:52px minmax(0,1fr);gap:8px}
+.log .mono{color:var(--ink-3)}
+.cases{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.case{display:grid;gap:8px;align-content:start}
+.refs{padding-left:20px;margin:0;display:grid;gap:8px;font-size:13.8px}
+.refs a{color:var(--accent)}
+.disclaimer{margin-top:22px;font-size:13px;color:var(--ink-2);border-top:1px solid var(--line);padding-top:14px;max-width:90ch}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--paper);font-size:13.5px;padding:8px 16px;border-radius:999px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:9}
+.toast.show{opacity:1}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+@media print{
+  body{background:#fff;font-size:12.5px}
+  .tabs,.noprint,.toast,.status .acts{display:none!important}
+  .status{position:static}
+  .card{border-color:#bbb;break-inside:avoid}
+}
+</style>
+<style>
+/* PSA page additions */
+.status .phase{font-size:13px;color:var(--ink-2)}
+.status .acts{display:flex;gap:6px;flex-wrap:wrap}
+.grp{font-size:13px;font-weight:700;border-radius:7px;padding:5px 10px;background:var(--line-2);color:var(--ink-2)}
+.grp.g-low{background:var(--go-soft);color:var(--go)}
+.grp.g-int{background:var(--warn-soft);color:var(--warn)}
+.grp.g-high,.grp.g-vhigh,.grp.g-mibc{background:var(--stop-soft);color:var(--stop)}
+.grp.g-vhigh,.grp.g-mibc{background:var(--stop);color:#fff}
+tr.hl td{background:var(--accent-soft)}
+tr.hl td:first-child{box-shadow:inset 3px 0 0 var(--accent);font-weight:700}
+.items{display:grid;gap:8px}
+.opt{border:1px solid var(--line-2);border-radius:8px;padding:8px 12px;display:grid;gap:2px}
+.opt.pref{border-color:var(--go);box-shadow:0 0 0 1px var(--go) inset}
+.opt b{font-size:14.5px}
+.opt span{font-size:13px;color:var(--ink-2)}
+.why{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}
+.why span{font-size:12px;border-radius:999px;padding:1px 9px;background:var(--line-2);color:var(--ink-2)}
+.rg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+@media (max-width:640px){.rg{grid-template-columns:minmax(0,1fr)}}
+.rg .m{border:1px solid var(--line-2);border-radius:8px;padding:9px 12px;background:var(--paper);display:grid;gap:3px;align-content:start}
+.rg .m .k{font-size:12px;color:var(--ink-2)}
+.rg .m .v{font-size:16px;font-weight:700}
+input[type=date]{font:inherit;font-size:14px;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:7px;padding:5px 8px;max-width:100%}
+.kt td{padding:5px 8px;vertical-align:middle}
+.kchart{width:100%;height:auto;display:block;margin-top:8px}
+.kchart text{font-family:var(--f-mono);font-size:11px;fill:var(--ink-3)}
+.kchart .ax{stroke:var(--line)}
+.kchart .ln{stroke:var(--accent);fill:none;stroke-width:2}
+.kchart .pt{fill:var(--accent)}
+.kchart .th{stroke:var(--stop);stroke-dasharray:4 4}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="masthead">
+    <div class="eyebrow">NMIBC · risk stratification, re-TURBT, intravesical therapy &amp; surveillance</div>
+    <h1>非肌肉侵犯性膀胱癌決策台</h1>
+    <p class="sub">輸入 TURBT 病理後，系統逐項提示下一個該補的資料：分期與分級、是否合併 CIS、年齡、腫瘤數目與大小、初發或復發、高危病理特徵、切除品質。同步算出 EAU 2021 風險分組（低、中、高、極高）與 AUA 分層，帶出 re-TURBT 判斷、術後灌注、BCG 誘導與維持排程、追蹤膀胱鏡間隔，並可分類 BCG 治療失敗。</p>
+    <div class="src"><span>EAU NMIBC Guidelines 2026（2021 EAU 風險模型）</span><span>AUA/SUO NMIBC 2024 修訂</span><span>Sylvester 2021 Eur Urol</span><span>IBCG 中度風險細分</span></div>
+  </header>
+
+  <nav class="tabs" role="tablist" aria-label="功能分頁">
+    <button class="tab" role="tab" id="tab-ws" aria-controls="ws" data-t="ws"><b>1</b>引導評估</button>
+    <button class="tab" role="tab" id="tab-risk" aria-controls="risk" data-t="risk"><b>2</b>風險分層對照</button>
+    <button class="tab" role="tab" id="tab-bcg" aria-controls="bcg" data-t="bcg"><b>3</b>BCG 排程</button>
+    <button class="tab" role="tab" id="tab-fail" aria-controls="fail" data-t="fail"><b>4</b>BCG 失敗分類</button>
+    <button class="tab" role="tab" id="tab-fu" aria-controls="fu" data-t="fu"><b>5</b>追蹤排程</button>
+    <button class="tab" role="tab" id="tab-cases" aria-controls="cases" data-t="cases"><b>6</b>示例病例</button>
+    <button class="tab" role="tab" id="tab-ref" aria-controls="ref" data-t="ref"><b>7</b>參考文獻</button>
+  </nav>
+
+  <div class="status" id="status" aria-live="polite"></div>
+
+  <!-- 1 workspace -->
+  <section class="pane" id="ws" role="tabpanel" aria-labelledby="tab-ws">
+    <div class="two">
+      <div class="stack">
+        <div class="card">
+          <h3>下一步：請補這些資料 <span class="pill ev" id="askCount"></span></h3>
+          <p class="small muted" style="margin-bottom:10px">直接在卡片內填寫，填完後系統會換成下一個問題。病理還沒回報，可以按「待回報」，系統先用現有資料往下判斷。</p>
+          <div class="asklist" id="asks"></div>
+          <div id="laterBox"></div>
+        </div>
+        <div class="card" id="pendCard" hidden>
+          <h3>待回報</h3>
+          <div id="pending"></div>
+        </div>
+        <div class="card" id="riskCard">
+          <h3>風險分層 <span class="pill mute" id="riskTag"></span></h3>
+          <div id="riskBox"><p class="small muted">輸入分期與分級後顯示。</p></div>
+        </div>
+        <div class="card" id="reCard" hidden>
+          <h3>re-TURBT</h3>
+          <div id="reBox"></div>
+        </div>
+        <div class="card" id="txCard" hidden>
+          <h3>術後灌注與輔助治療</h3>
+          <div id="txBox"></div>
+        </div>
+        <div class="card" id="fuCard" hidden>
+          <h3>追蹤排程</h3>
+          <div id="fuBox"></div>
+        </div>
+      </div>
+      <div class="stack">
+        <div class="card">
+          <h3>分層路徑</h3>
+          <ol class="path" id="path"></ol>
+        </div>
+        <div>
+          <div class="sub-h" style="display:flex;justify-content:space-between;align-items:center">完整資料表（可隨時修改任一層） <button class="btn sm noprint" id="expandAll" type="button">全部展開</button></div>
+          <div id="sheet"></div>
+        </div>
+        <div class="card">
+          <h3>資料增補紀錄</h3>
+          <div class="log" id="log"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2 risk tables -->
+  <section class="pane" id="risk" role="tabpanel" aria-labelledby="tab-risk" hidden>
+    <div class="two">
+      <div class="stack">
+        <div class="card">
+          <h3>EAU 2021 風險分組（EAU 2026 Table 6.2） <span class="pill ev">藍底＝目前病人</span></h3>
+          <p class="small muted" style="margin-bottom:8px">臨床風險因子：年齡 &gt;70、多發乳突狀腫瘤、直徑 ≥3 cm。WHO 1973 或 2004/2016 擇一即可；PUNLMP 視為 LG。</p>
+          <div class="tablebox"><table>
+            <thead><tr><th>分組</th><th>條件</th></tr></thead>
+            <tbody>
+              <tr data-g="low"><td>低</td><td>初發、單發、TaT1 LG/G1、&lt;3 cm、無 CIS、≤70 歲（0 項風險因子）<br>或 初發 Ta LG/G1、無 CIS、最多 1 項風險因子</td></tr>
+              <tr data-g="int"><td>中度</td><td>無 CIS，且不屬於低、高、極高風險</td></tr>
+              <tr data-g="high"><td>高</td><td>所有 T1 HG/G3 無 CIS（極高除外）<br>所有 CIS（極高除外；原發單純 CIS 屬高風險）<br>Ta LG/G2 或 T1 G1、無 CIS，3 項風險因子<br>Ta HG/G3 或 T1 LG、無 CIS，≥2 項風險因子<br>T1 G2、無 CIS，≥1 項風險因子</td></tr>
+              <tr data-g="vhigh"><td>極高</td><td>Ta HG/G3＋CIS，3 項風險因子<br>T1 G2＋CIS，≥2 項風險因子<br>T1 HG/G3＋CIS，≥1 項風險因子<br>T1 HG/G3、無 CIS，3 項風險因子<br>任何攝護腺尿道 CIS、高侵襲性組織亞型或 LVI</td></tr>
+            </tbody>
+          </table></div>
+          <p class="note" style="margin-top:10px">模型建立於初發、未立即接受 BCG 的病人。復發者依其他因子歸入中、高或極高風險（不歸為低風險）。線上計算器：nmibc.net。</p>
+        </div>
+        <div class="card">
+          <h3>EAU 各組進展機率（WHO 2004/2016）</h3>
+          <div class="tablebox"><table>
+            <thead><tr><th>分組</th><th>1 年</th><th>5 年</th><th>10 年</th></tr></thead>
+            <tbody>
+              <tr data-g="low"><td>低</td><td class="mono">0.06%</td><td class="mono">0.93%</td><td class="mono">3.7%</td></tr>
+              <tr data-g="int"><td>中度</td><td class="mono">1.0%</td><td class="mono">4.9%</td><td class="mono">8.5%</td></tr>
+              <tr data-g="high"><td>高</td><td class="mono">3.5%</td><td class="mono">9.6%</td><td class="mono">14%</td></tr>
+              <tr data-g="vhigh"><td>極高</td><td class="mono">16%</td><td class="mono">40%</td><td class="mono">53%</td></tr>
+            </tbody>
+          </table></div>
+          <p class="note" style="margin-top:10px">數值來自未立即接受 BCG 的初發病人；有接受 BCG 的驗證研究顯示高、極高風險的實際進展率較低。不適用於組織亞型、LVI、攝護腺尿道 CIS、原發 CIS 與復發病人。</p>
+        </div>
+      </div>
+      <div class="stack">
+        <div class="card">
+          <h3>AUA/SUO 風險分層（2024 修訂 Table 4） <span class="pill mute" id="auaTag">未計算</span></h3>
+          <div class="tablebox"><table>
+            <thead><tr><th>分組</th><th>條件</th></tr></thead>
+            <tbody>
+              <tr data-a="low"><td>低</td><td>LG 單發 Ta ≤3 cm；PUNLMP</td></tr>
+              <tr data-a="int"><td>中度</td><td>LG Ta 1 年內復發；單發 LG Ta &gt;3 cm；LG Ta 多發；HG Ta ≤3 cm；LG T1</td></tr>
+              <tr data-a="high"><td>高</td><td>HG T1；任何復發 HG Ta；HG Ta &gt;3 cm 或多發；任何 CIS；HG 病人任何 BCG 失敗；任何組織亞型；任何 LVI；任何攝護腺尿道 HG 侵犯</td></tr>
+            </tbody>
+          </table></div>
+          <p class="note" style="margin-top:10px">AUA 只有三級、不分極高風險，以 WHO 2004/2016 分級為準（本頁以 G1→LG、G3→HG 換算，G2 無法換算）。AUA/SUO 於 2026 年 9 月再次修訂，全文須會員登入，本頁未能核對。</p>
+        </div>
+        <div class="card">
+          <h3>中度風險細分（IBCG） <span class="pill mute" id="ibcgTag"></span></h3>
+          <p class="small">五項因子：多發、直徑 &gt;3 cm、早期復發（&lt;1 年）、頻繁復發（&gt;1 次／年）、先前膀胱內治療失敗。</p>
+          <p class="note" style="margin-top:8px">EAU 2026 引述驗證研究：0 項者進展風險與 EAU 低風險相近；≥3 項者與 EAU 高風險相近。</p>
+          <div id="ibcgBox" style="margin-top:8px"></div>
+        </div>
+        <div class="card">
+          <h3>re-TURBT 適應症</h3>
+          <div class="tablebox"><table>
+            <thead><tr><th></th><th>EAU 2026（強建議）</th><th>AUA 2024</th></tr></thead>
+            <tbody>
+              <tr><td>切除不完整</td><td>需要（含不確定是否完整）</td><td>需要（強建議）</td></tr>
+              <tr><td>無逼尿肌</td><td>需要；Ta LG/G1 與原發 CIS 除外</td><td>—</td></tr>
+              <tr><td>T1</td><td>需要</td><td>需要，須含肌層（強建議）</td></tr>
+              <tr><td>高風險 HG Ta</td><td>—</td><td>考慮（中等建議）</td></tr>
+              <tr><td>時機</td><td>初次切除後 2–6 週，須切除原腫瘤部位（弱建議）</td><td>6 週內</td></tr>
+            </tbody>
+          </table></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 BCG schedule -->
+  <section class="pane" id="bcg" role="tabpanel" aria-labelledby="tab-bcg" hidden>
+    <div class="two">
+      <div class="stack">
+        <div class="card">
+          <h3>BCG 排程計算</h3>
+          <div class="grid2" style="margin-bottom:12px">
+            <label class="field"><span class="flabel">TURBT 日期</span><input type="date" id="bTurbt"><span class="hint">用來檢查是否滿 2 週</span></label>
+            <label class="field"><span class="flabel">誘導第一劑日期</span><input type="date" id="bStart"></label>
+            <label class="field"><span class="flabel">維持期長度</span><select id="bYears"><option value="1">1 年（第 3、6、12 個月）</option><option value="3">3 年（第 3、6、12、18、24、30、36 個月）</option><option value="2">2 年（至第 24 個月）</option></select><span class="hint" id="bYearsHint"></span></label>
+          </div>
+          <div id="bOut"><p class="small muted">輸入誘導第一劑日期。</p></div>
+        </div>
+      </div>
+      <div class="stack">
+        <div class="card">
+          <h3>方案</h3>
+          <div class="tablebox"><table>
+            <tbody>
+              <tr><td>誘導</td><td>每週 1 次 × 6 週</td></tr>
+              <tr><td>維持（SWOG）</td><td>第 3、6、12、18、24、30、36 個月，各每週 1 次 × 3 週；月份自誘導開始起算</td></tr>
+              <tr><td>中度風險</td><td>1 年：誘導＋第 3、6、12 個月（EAU 替代選項；AUA 完全反應者考慮維持 1 年）</td></tr>
+              <tr><td>高／極高風險</td><td>1–3 年（EAU）；AUA：完全反應者維持 3 年（視供應）</td></tr>
+              <tr><td>減量方案</td><td>誘導 3 次＋第 3、6、12 個月各 2 次的方案效果較差；高風險每 3 個月 1 次 × 3 年也不如標準方案</td></tr>
+            </tbody>
+          </table></div>
+        </div>
+        <div class="card">
+          <h3>BCG 絕對禁忌（EAU 強建議）</h3>
+          <ul class="plain">
+            <li>TURBT 後 2 週內</li>
+            <li>肉眼血尿</li>
+            <li>創傷性導尿後</li>
+            <li>有症狀的泌尿道感染</li>
+          </ul>
+          <p class="note" style="margin-top:8px">白血球尿、鏡下血尿或無症狀菌尿不是禁忌。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 BCG failure -->
+  <section class="pane" id="fail" role="tabpanel" aria-labelledby="tab-fail" hidden>
+    <div class="two">
+      <div class="stack">
+        <div class="card">
+          <h3>BCG 治療後發現</h3>
+          <div class="grid2" id="fForm"></div>
+        </div>
+        <div class="card">
+          <h3>分類與處置</h3>
+          <div id="fOut"><p class="small muted">選擇已接受的 BCG 療程與發現。</p></div>
+        </div>
+      </div>
+      <div class="stack">
+        <div class="card">
+          <h3>EAU 2026 Table 7.2 定義</h3>
+          <div class="tablebox"><table>
+            <tbody>
+              <tr><td>BCG-refractory</td><td>第 3 個月有 T1 HG；再誘導或第一次維持後，第 3 個月以後或第 6 個月仍有 Ta HG；第 3 個月有 CIS 且第 6 個月仍持續；維持治療期間出現 HG</td></tr>
+              <tr><td>BCG-relapsing</td><td>完成維持、初期有反應後 HG 復發</td></tr>
+              <tr><td>BCG-unresponsive</td><td>所有 refractory，以及適當 BCG 完成後 6 個月內 Ta/T1 HG 復發、或 12 個月內出現 CIS</td></tr>
+              <tr><td>BCG-exposed</td><td>只完成誘導、第 3 個月有 Ta HG 或 CIS（BCG-resistant）；或適當／不適當 BCG 後的延遲復發（至 24 個月）</td></tr>
+              <tr><td>適當 BCG</td><td>誘導 ≥5/6 劑，加上第二次誘導 ≥2/6 劑或維持 ≥2/3 劑</td></tr>
+              <tr><td>不算失敗</td><td>BCG 期間或之後的 LG 復發</td></tr>
+            </tbody>
+          </table></div>
+        </div>
+        <div class="card">
+          <h3>BCG-unresponsive 的選項</h3>
+          <ul class="plain">
+            <li>根除性膀胱切除（EAU 強建議）</li>
+            <li>臨床試驗</li>
+            <li>不適合或拒絕手術：pembrolizumab（CIS）、nadofaragene firadenovec、TAR-200、N-803（nogapendekin alfa）＋BCG、cretostimogene grenadenorepvec、sequential gemcitabine/docetaxel、電動或熱療 mitomycin C</li>
+          </ul>
+          <p class="note" style="margin-top:8px">EAU 認為保留膀胱的療法在腫瘤學上仍不如 RC。AUA：HG T1 在單次誘導後持續者，適合手術應提供 RC；Ta 或 CIS 在單次誘導後持續者應提供第二次 BCG。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 follow-up -->
+  <section class="pane" id="fu" role="tabpanel" aria-labelledby="tab-fu" hidden>
+    <div class="two">
+      <div class="stack">
+        <div class="card">
+          <h3>EAU 2026 追蹤 <span class="pill ev">藍底＝目前病人</span></h3>
+          <div class="tablebox"><table>
+            <thead><tr><th>分組</th><th>膀胱鏡</th></tr></thead>
+            <tbody>
+              <tr data-fu="low"><td>低</td><td>第 3 個月；陰性則 9 個月後，之後每年至第 5 年</td></tr>
+              <tr data-fu="intLG"><td>中度 Ta LG</td><td>第 3 個月；陰性則每 6 個月 × 2 年，之後每年至第 10 年</td></tr>
+              <tr data-fu="intOther"><td>其他中度</td><td>EAU 未明確規範（中度 HG Ta 比照高風險）</td></tr>
+              <tr data-fu="high"><td>高、極高<br>（含中度 HG Ta）</td><td>第 3 個月膀胱鏡＋細胞學；陰性則每 3 個月 × 2 年，之後每 6 個月至第 5 年，再每年終生；每年 CT urography</td></tr>
+            </tbody>
+          </table></div>
+          <p class="note" style="margin-top:10px">追蹤期間細胞學陽性但膀胱內無腫瘤：做 mapping 或 PDD 導引切片，並檢查膀胱外（CT urography、攝護腺尿道切片）。</p>
+        </div>
+      </div>
+      <div class="stack">
+        <div class="card">
+          <h3>AUA 2024 追蹤 <span class="pill ev">藍底＝目前病人</span></h3>
+          <div class="tablebox"><table>
+            <thead><tr><th>分組</th><th>膀胱鏡</th></tr></thead>
+            <tbody>
+              <tr data-af="low"><td>低</td><td>第 3–4 個月；陰性則 6–9 個月後，之後每年；5 年後共享決策。不需常規上泌尿道影像，也不常規做尿液標記或細胞學</td></tr>
+              <tr data-af="int"><td>中度</td><td>第 3–4 個月；之後膀胱鏡＋細胞學每 3–6 個月 × 2 年，第 3–4 年每 6–12 個月，之後每年；上泌尿道影像每 1–2 年</td></tr>
+              <tr data-af="high"><td>高</td><td>第 3–4 個月；之後膀胱鏡＋細胞學每 3–4 個月 × 2 年，第 3–4 年每 6 個月，之後每年；上泌尿道影像每 1–2 年</td></tr>
+            </tbody>
+          </table></div>
+          <p class="note" style="margin-top:10px">尿液生物標記不可取代膀胱鏡（AUA）。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 cases -->
+  <section class="pane" id="cases" role="tabpanel" aria-labelledby="tab-cases" hidden>
+    <p class="muted small" style="margin-bottom:12px">載入示例會覆蓋目前輸入（可先用「複製摘要」保存）。示例數值為教學用的虛構資料。</p>
+    <div class="cases" id="caseList"></div>
+  </section>
+
+  <!-- 7 references -->
+  <section class="pane" id="ref" role="tabpanel" aria-labelledby="tab-ref" hidden>
+    <div class="card">
+      <h3>參考文獻</h3>
+      <ol class="refs" id="refList"></ol>
+      <div class="sub-h" style="margin-top:18px">更新紀錄</div>
+      <ul class="plain small">
+        <li>2026-10-04：初版。依 EAU NMIBC Guidelines 2026（2026 年 3 月版）的 2021 EAU 風險模型、re-TURBT、風險別治療、BCG 失敗分類與追蹤；AUA/SUO 2024 修訂的風險分層與追蹤。</li>
+      </ul>
+    </div>
+    <p class="disclaimer">本工具供醫療專業人員教育與流程輔助使用，不取代臨床判斷、多專科團隊討論與院內規範。EAU 風險計算以官方表格的條件實作，正式判讀可再以 nmibc.net 核對。輸入資料只存在您這台裝置的瀏覽器中（localStorage），不會上傳；請勿輸入可識別病人身分的資訊。</p>
+  </section>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+/*ENGINE-START*/
+const NB = (() => {
+const num = v => (v === '' || v === null || v === undefined || v === false || !isFinite(Number(v))) ? null : Number(v);
+
+/* ---------- field schema ---------- */
+const LAYERS = [
+  { n: 1, t: '病理與分期', d: 'T 分期、分級（WHO 2004/2016 或 1973）、合併 CIS' },
+  { n: 2, t: '臨床風險因子', d: '年齡、腫瘤數目與大小、初發或復發' },
+  { n: 3, t: '高危病理特徵', d: '攝護腺尿道 CIS、組織亞型、淋巴血管侵犯' },
+  { n: 4, t: '切除品質', d: '逼尿肌、完整性、穿孔或出血' },
+  { n: 5, t: '復發史', d: 'IBCG 中度風險細分與 AUA 分層用' }
+];
+const F = {
+  stage: { l: 'T 分期', t: 'sel', L: 1, o: [['Ta', 'Ta：非侵犯性乳突狀'], ['T1', 'T1：侵犯黏膜下層（lamina propria）'], ['CIS', '原發性（單純）CIS，無乳突狀腫瘤'], ['T2', '≥T2：侵犯逼尿肌']] },
+  g04: { l: '分級 WHO 2004/2016', t: 'sel', L: 1, h: '與 WHO 1973 至少填一種；PUNLMP 併入 LG', o: [['PUNLMP', 'PUNLMP'], ['LG', '低惡性度（LG）'], ['HG', '高惡性度（HG）']] },
+  g73: { l: '分級 WHO 1973', t: 'sel', L: 1, o: [['G1', 'G1'], ['G2', 'G2'], ['G3', 'G3']] },
+  cis: { l: '合併 CIS（concomitant CIS）', t: 'sel', L: 1, o: [['no', '無'], ['yes', '有']] },
+  age: { l: '年齡', t: 'num', u: '歲', step: 1, L: 2, h: '>70 歲為 EAU 臨床風險因子' },
+  multi: { l: '乳突狀腫瘤數目', t: 'sel', L: 2, o: [['single', '單發'], ['multiple', '多發']] },
+  size: { l: '最大腫瘤直徑', t: 'sel', L: 2, h: 'EAU 2026 文字寫 >3 cm，原始 2021 模型為 ≥3 cm；剛好 3 cm 請依臨床判斷', o: [['lt3', '<3 cm'], ['ge3', '≥3 cm']] },
+  hist: { l: '初發或復發', t: 'sel', L: 2, o: [['primary', '初發'], ['recurrent', '復發']] },
+  cisPU: { l: 'CIS 侵犯攝護腺尿道', t: 'chk', L: 3 },
+  subtype: { l: '高侵襲性組織亞型（micropapillary、plasmacytoid、sarcomatoid、nested、神經內分泌等）', t: 'chk', L: 3 },
+  lvi: { l: '淋巴血管侵犯（LVI）', t: 'chk', L: 3 },
+  vhNone: { l: '以上皆無', t: 'chk', L: 3 },
+  muscle: { l: '檢體含逼尿肌（detrusor muscle）', t: 'sel', L: 4, o: [['yes', '有'], ['no', '無']] },
+  complete: { l: '切除完整性', t: 'sel', L: 4, o: [['yes', '完整切除'], ['no', '未完整切除'], ['doubt', '不確定是否完整']] },
+  perf: { l: '疑似膀胱穿孔，或出血需持續沖洗', t: 'chk', L: 4 },
+  rec1y: { l: '距上次 TURBT <1 年即復發', t: 'chk', L: 5 },
+  recFreq: { l: '復發頻率 >1 次／年', t: 'chk', L: 5 },
+  ivtFail: { l: '先前膀胱內灌注治療失敗', t: 'chk', L: 5 },
+  bcgPrior: { l: '曾接受 BCG 後高惡性度復發', t: 'chk', L: 5 },
+  recNone: { l: '以上皆無', t: 'chk', L: 5 }
+};
+const LABEL = { low: '低風險', int: '中度風險', high: '高風險', vhigh: '極高風險', mibc: '肌肉侵犯（MIBC）' };
+const RANK = { low: 0, int: 1, high: 2, vhigh: 3 };
+
+/* ---------- derived ---------- */
+function derive(s) {
+  const d = {};
+  d.age = num(s.age);
+  const f = { age: d.age === null ? null : d.age > 70, multi: s.multi ? s.multi === 'multiple' : null, size: s.size ? s.size === 'ge3' : null };
+  d.rfFlags = f;
+  d.rf = Object.values(f).filter(v => v === true).length;
+  d.rfUnknown = Object.values(f).filter(v => v === null).length;
+  d.rfList = [f.age && '年齡 >70', f.multi && '多發', f.size && '直徑 ≥3 cm'].filter(Boolean);
+  d.vh = [s.cisPU && '攝護腺尿道 CIS', s.subtype && '高侵襲性組織亞型', s.lvi && 'LVI'].filter(Boolean);
+  d.cis = s.stage === 'CIS' || s.cis === 'yes';
+  d.hg = s.g04 === 'HG' || s.g73 === 'G3';
+  d.lg = (s.g04 === 'LG' || s.g04 === 'PUNLMP') || s.g73 === 'G1';
+  return d;
+}
+
+/* ---------- EAU 2021 scoring-model risk groups (EAU 2026 Table 6.2) ---------- */
+function eauCore(sys, g, st, cis, rf, primary) {
+  const HG = sys === '04' ? g === 'HG' : g === 'G3';
+  const LG1 = sys === '04' ? g === 'LG' : g === 'G1'; // "LG/G1"
+  if (st === 'Ta' && HG && cis && rf === 3) return ['vhigh', 'Ta HG/G3＋CIS＋3 項風險因子'];
+  if (sys === '73' && st === 'T1' && g === 'G2' && cis && rf >= 2) return ['vhigh', 'T1 G2＋CIS＋≥2 項風險因子'];
+  if (st === 'T1' && HG && cis && rf >= 1) return ['vhigh', 'T1 HG/G3＋CIS＋≥1 項風險因子'];
+  if (st === 'T1' && HG && !cis && rf === 3) return ['vhigh', 'T1 HG/G3、無 CIS、3 項風險因子'];
+  if (cis) return ['high', '合併 CIS'];
+  if (st === 'T1' && HG) return ['high', 'T1 HG/G3'];
+  if (rf === 3 && ((sys === '04' && st === 'Ta' && g === 'LG') || (sys === '73' && st === 'Ta' && g === 'G2') || (sys === '73' && st === 'T1' && g === 'G1'))) return ['high', `${st} ${g}＋3 項風險因子`];
+  if (rf >= 2 && ((st === 'Ta' && HG) || (sys === '04' && st === 'T1' && g === 'LG'))) return ['high', `${st} ${g}＋≥2 項風險因子`];
+  if (sys === '73' && st === 'T1' && g === 'G2' && rf >= 1) return ['high', 'T1 G2＋≥1 項風險因子'];
+  if (primary && LG1 && (st === 'Ta' || st === 'T1') && rf === 0) return ['low', `初發、單發 ${st} ${g}、<3 cm、≤70 歲、無 CIS`];
+  if (primary && LG1 && st === 'Ta' && rf <= 1) return ['low', `初發 Ta ${g}、無 CIS、≤1 項風險因子`];
+  return ['int', primary ? '不屬於低、高、極高風險' : '復發者不歸為低風險'];
+}
+function eauGroup(s, d, sys) {
+  const g = sys === '04' ? (s.g04 === 'PUNLMP' ? 'LG' : s.g04) : s.g73;
+  const miss = [];
+  if (!s.stage) miss.push('stage');
+  if (s.stage === 'T2') return { id: 'mibc', why: ['≥T2'], miss };
+  if (d.vh.length) return { id: 'vhigh', why: d.vh, miss, sys };
+  if (s.stage === 'CIS') return { id: 'high', why: ['原發性（單純）CIS'], miss, sys };
+  if (!g) return null;
+  if (!s.cis) miss.push('cis');
+  if (miss.length) return { id: null, why: [], miss, sys };
+  const cis = s.cis === 'yes';
+  const primary = s.hist ? s.hist === 'primary' : null;
+  const outs = new Set(), why = {};
+  for (let r = d.rf; r <= d.rf + d.rfUnknown; r++) for (const p of primary === null ? [true, false] : [primary]) { const [id, w] = eauCore(sys, g, s.stage, cis, r, p); outs.add(id); why[id] = why[id] || w; }
+  const ids = [...outs].sort((a, b) => RANK[a] - RANK[b]);
+  const top = ids[ids.length - 1];
+  if (d.rfUnknown) miss.push('rf'); if (primary === null && ids.length > 1) miss.push('hist');
+  return { id: top, why: [why[top]], range: ids.length > 1 ? ids : null, prov: ids.length > 1, miss, sys };
+}
+function eau(s, d) {
+  const a = eauGroup(s, d, '04'), b = eauGroup(s, d, '73');
+  const list = [a, b].filter(x => x && x.id);
+  if (!list.length) return a || b || { id: null, why: [], miss: ['grade'] };
+  const best = list.reduce((m, x) => (x.id === 'mibc' || (m.id !== 'mibc' && RANK[x.id] > RANK[m.id])) ? x : m);
+  return { ...best, by: { '04': a && a.id, '73': b && b.id }, disagree: list.length === 2 && a.id !== b.id };
+}
+
+/* ---------- AUA/SUO risk (2024 amendment Table 4) ---------- */
+function aua(s, d) {
+  if (!s.stage) return null;
+  if (s.stage === 'T2') return { id: 'mibc', why: ['≥T2'] };
+  // AUA uses WHO 2004/2016; fall back to 1973 G1→LG, G3→HG
+  const g = s.g04 === 'PUNLMP' ? 'PUNLMP' : s.g04 || (s.g73 === 'G1' ? 'LG' : s.g73 === 'G3' ? 'HG' : null);
+  const hi = [];
+  if (d.cis) hi.push('CIS');
+  if (s.subtype) hi.push('組織亞型'); if (s.lvi) hi.push('LVI'); if (s.cisPU) hi.push('攝護腺尿道 HG 侵犯');
+  if (g === 'HG' && s.stage === 'T1') hi.push('HG T1');
+  if (g === 'HG' && s.stage === 'Ta' && s.hist === 'recurrent') hi.push('復發 HG Ta');
+  if (g === 'HG' && s.stage === 'Ta' && (s.size === 'ge3' || s.multi === 'multiple')) hi.push('HG Ta >3 cm 或多發');
+  if (s.bcgPrior && g === 'HG') hi.push('HG 病人 BCG 失敗');
+  if (hi.length) return { id: 'high', why: hi };
+  if (!g) return { id: null, why: [], miss: ['grade'] };
+  if (g === 'PUNLMP') return { id: 'low', why: ['PUNLMP'] };
+  const it = [];
+  if (g === 'LG' && s.stage === 'T1') it.push('LG T1');
+  if (g === 'HG' && s.stage === 'Ta') it.push('HG Ta ≤3 cm');
+  if (g === 'LG' && s.stage === 'Ta') {
+    if (s.hist === 'recurrent' && s.rec1y) it.push('LG Ta 1 年內復發');
+    if (s.multi === 'multiple') it.push('LG Ta 多發');
+    if (s.size === 'ge3') it.push('單發 LG Ta >3 cm');
+  }
+  if (it.length) {
+    const prov = g === 'HG' && (!s.hist || !s.size || !s.multi);
+    return { id: 'int', why: it, prov };
+  }
+  const prov = !s.size || !s.multi || (s.hist === 'recurrent' && !s.rec1y && !s.recNone);
+  return { id: 'low', why: ['LG 單發 Ta ≤3 cm'], prov };
+}
+
+/* ---------- IBCG sub-stratification of intermediate risk (EAU 2026 §6.4) ---------- */
+function ibcg(s) {
+  const f = [s.multi === 'multiple' && '多發', s.size === 'ge3' && '直徑 >3 cm', s.rec1y && '早期復發（<1 年）', s.recFreq && '頻繁復發（>1 次／年）', s.ivtFail && '先前膀胱內治療失敗'].filter(Boolean);
+  return { n: f.length, f, band: f.length === 0 ? 'low' : f.length >= 3 ? 'high' : 'mid' };
+}
+
+/* ---------- re-TURBT ---------- */
+function reTurbt(s, d) {
+  if (!s.stage || s.stage === 'T2') return null;
+  const eauWhy = [];
+  if (s.complete === 'no' || s.complete === 'doubt') eauWhy.push(s.complete === 'no' ? '初次切除不完整' : '不確定是否完整切除');
+  const exempt = (s.stage === 'Ta' && d.lg && !d.hg) || s.stage === 'CIS';
+  if (s.muscle === 'no' && !exempt) eauWhy.push('檢體無逼尿肌');
+  if (s.stage === 'T1') eauWhy.push('T1 腫瘤');
+  const auaWhy = [];
+  if (s.complete === 'no') auaWhy.push('切除不完整：應再切除或處理殘留腫瘤（強建議）');
+  if (s.stage === 'T1') auaWhy.push('T1：6 週內再切除原腫瘤部位，須含肌層（強建議）');
+  if (s.stage === 'Ta' && d.hg) auaWhy.push('高風險 HG Ta：考慮 6 週內再切除（中等建議）');
+  const missing = !s.complete || (!s.muscle && !exempt);
+  return { need: eauWhy.length > 0, eauWhy, auaWhy, missing, exemptNote: s.muscle === 'no' && exempt ? (s.stage === 'CIS' ? '原發性 CIS 無逼尿肌時不強制再切除' : 'Ta LG/G1 無逼尿肌時不強制再切除') : null };
+}
+
+/* ---------- treatment by EAU group ---------- */
+function treatment(s, d, g) {
+  if (!g) return null;
+  const O = [], add = (t, x, pref) => O.push({ t, x, pref: !!pref });
+  const si = { ok: !s.perf, why: s.perf ? '疑似穿孔或需持續沖洗的出血：不給予立即單次灌注' : null };
+  if (g === 'mibc') { add('依肌肉侵犯性膀胱癌（MIBC）處理', '本頁不涵蓋；請做分期影像並轉介 MIBC 治療。', true); return { opts: O, si }; }
+  const smallLateLG = s.hist === 'recurrent' && !s.rec1y && s.stage === 'Ta' && d.lg && !d.hg;
+  if (g === 'low') {
+    add('TURBT 後 24 小時內單次立即化療灌注', si.ok ? 'EAU 強建議；低風險只需這一劑，不需後續誘導治療（AUA）。藥物如 mitomycin C、gemcitabine、epirubicin。' : si.why, si.ok);
+    add('無法單次灌注時：術後生理食鹽水或清水持續沖洗', 'EAU 強建議。');
+  } else if (g === 'int') {
+    if (smallLateLG) add('小型 LG 復發（距上次 TURBT >1 年）：單次立即化療灌注', si.ok ? 'EAU 強建議。' : si.why, si.ok);
+    else if (si.ok) add('單次立即化療灌注（選擇性）', 'AUA：中度風險可考慮 24 小時內單次灌注；EAU 對中度風險未列為常規。');
+    add('膀胱內化療，誘導 ± 維持，總長不超過 1 年', 'EAU：多數中度風險的合理第一線；最佳排程未定。', true);
+    add('BCG 1 年：誘導 6 週＋第 3、6、12 個月各 3 週維持', 'EAU 替代選項；AUA：誘導後完全反應者考慮維持 1 年。');
+    add('選擇性：化學消融、主動監測或門診電燒', '小型復發 LG Ta 適用；依個別復發與進展風險決定。');
+  } else if (g === 'high') {
+    add('全劑量 BCG 1–3 年：誘導 6 週＋第 3、6、12、18、24、30、36 個月各 3 週維持', 'EAU 強建議；第 2、3 年的額外效益須權衡副作用、成本與 BCG 供應。AUA：誘導後完全反應者維持 3 年。', true);
+    add('與病人討論立即根除性膀胱切除（RC）', 'EAU 強建議討論。');
+    add('BCG＋免疫檢查點抑制劑（sasanlimab、durvalumab）', 'EAU 2026：BCG-naïve 的高／極高風險可討論加入（強建議討論利弊）。');
+  } else if (g === 'vhigh') {
+    add('討論立即根除性膀胱切除（RC）', 'EAU 強建議；極高風險 5 年進展率約 40%。', true);
+    add('全劑量 BCG 1–3 年（拒絕或不適合 RC 者）', 'EAU 強建議作為選項。');
+    add('BCG＋免疫檢查點抑制劑（sasanlimab、durvalumab）', 'EAU 2026：BCG-naïve 者可討論。');
+  }
+  if (g === 'high' || g === 'vhigh') add('多專科團隊討論', 'EAU 強建議。');
+  if (s.cisPU) add('攝護腺尿道 CIS：TURP 後 BCG 灌注（保留膀胱時）', 'EAU 弱建議。');
+  return { opts: O, si };
+}
+
+/* ---------- surveillance ---------- */
+function followUp(s, d, g) {
+  if (!g || g === 'mibc') return null;
+  const lgTa = s.stage === 'Ta' && d.lg && !d.hg, hgTa = s.stage === 'Ta' && d.hg;
+  const HIGH = '第 3 個月膀胱鏡＋尿液細胞學；陰性則每 3 個月一次共 2 年，之後每 6 個月一次至第 5 年，再之後每年一次終生。每年 CT urography。';
+  let key, eauTxt;
+  if (g === 'low') { key = 'low'; eauTxt = '第 3 個月膀胱鏡；陰性則 9 個月後（第 12 個月）再做，之後每年一次至第 5 年。'; }
+  else if (g === 'int' && lgTa) { key = 'intLG'; eauTxt = '第 3 個月膀胱鏡；陰性則每 6 個月一次共 2 年，之後每年一次至第 10 年。'; }
+  else if (g === 'int' && hgTa) { key = 'high'; eauTxt = '中度風險 HG Ta 比照高風險：' + HIGH; }
+  else if (g === 'int') { key = 'intOther'; eauTxt = 'EAU 2026 未明確規範此類中度風險（如 T1 LG、T1 G2）的追蹤頻率，請依個別風險在中度 Ta LG 與高風險排程之間決定。'; }
+  else { key = 'high'; eauTxt = HIGH; }
+  return { key, eau: eauTxt, upper: key === 'high' ? '每年 CT urography（EAU）' : null };
+}
+function auaFollow(id) {
+  return { low: '第 3–4 個月首次膀胱鏡；陰性則 6–9 個月後再做，之後每年；5 年後無復發可共享決策。不需常規上泌尿道影像。', int: '第 3–4 個月首次膀胱鏡；之後膀胱鏡＋細胞學每 3–6 個月共 2 年，第 3–4 年每 6–12 個月，之後每年。上泌尿道影像每 1–2 年。', high: '第 3–4 個月首次膀胱鏡；之後膀胱鏡＋細胞學每 3–4 個月共 2 年，第 3–4 年每 6 個月，之後每年。上泌尿道影像每 1–2 年。' }[id] || null;
+}
+
+/* ---------- BCG schedule (SWOG maintenance, months from induction start) ---------- */
+function bcgSchedule(start, years, turbt) {
+  const t0 = Date.parse(start);
+  if (!isFinite(t0)) return null;
+  const D = 864e5, iso = t => new Date(t).toISOString().slice(0, 10);
+  const addMonths = (t, m) => { const x = new Date(t); const day = x.getUTCDate(); x.setUTCMonth(x.getUTCMonth() + m); if (x.getUTCDate() !== day) x.setUTCDate(0); return x.getTime(); };
+  const rows = [];
+  for (let w = 0; w < 6; w++) rows.push({ phase: '誘導', n: w + 1, date: iso(t0 + w * 7 * D) });
+  const months = years >= 3 ? [3, 6, 12, 18, 24, 30, 36] : years >= 2 ? [3, 6, 12, 18, 24] : [3, 6, 12];
+  months.forEach(m => { const b = addMonths(t0, m); for (let w = 0; w < 3; w++) rows.push({ phase: `維持（第 ${m} 個月）`, n: w + 1, date: iso(b + w * 7 * D) }); });
+  const warn = [];
+  const tt = Date.parse(turbt);
+  if (isFinite(tt) && (t0 - tt) / D < 14) warn.push(`誘導開始距 TURBT 只有 ${Math.round((t0 - tt) / D)} 天：TURBT 後 2 週內為 BCG 絕對禁忌`);
+  return { rows, total: rows.length, warn };
+}
+
+/* ---------- BCG failure categories (EAU 2026 Table 7.2) ---------- */
+function bcgFail(b) {
+  b = b || {};
+  if (b.intol) return { id: 'intol', t: 'BCG 不耐受', x: '嚴重副作用導致無法完成治療。', mg: ['依腫瘤風險考慮 RC、膀胱內化療或臨床試驗'] };
+  const f = b.finding, tm = b.timing, m = num(b.months), course = b.course;
+  if (!f) return null;
+  if (f === 'MIBC') return { id: 'mibc', t: '進展為肌肉侵犯（MIBC）', x: '依 MIBC 處理。', mg: ['分期影像，轉介根除性治療'] };
+  if (f === 'none') return { id: 'cr', t: '無殘留或復發', x: '持續依原風險排程追蹤與維持治療。', mg: [] };
+  if (f === 'LG') return { id: 'lg', t: '低惡性度復發：不算 BCG 失敗', x: '依腫瘤特徵個別化處理；原本為高／極高風險者應更積極追蹤。', mg: ['原為中度風險：重複 BCG 或膀胱內化療', '臨床試驗'] };
+  if (!tm) return { id: null, t: '請選擇發現時間點', x: '', mg: [] };
+  const UNR = ['根除性膀胱切除（RC）：EAU 強建議', '臨床試驗', '不適合或拒絕 RC：保留膀胱策略，例如 pembrolizumab（CIS）、nadofaragene firadenovec、TAR-200、N-803＋BCG、cretostimogene、sequential gemcitabine/docetaxel、電動或熱療 mitomycin C'];
+  const refr = (why) => ({ id: 'unresponsive', sub: 'refractory', t: 'BCG-refractory（屬 BCG-unresponsive）', x: why, mg: UNR });
+  if (tm === 'maint') return refr('BCG 維持治療期間出現高惡性度腫瘤。');
+  if (tm === '3m') {
+    if (f === 'T1HG') return { ...refr('第 3 個月評估即有 T1 HG。'), mg: ['AUA：適合手術者應提供 RC', ...UNR.slice(1)] };
+    if (f === 'TaHG') return { id: 'exposed', sub: 'resistant', t: 'BCG-resistant（屬 BCG-exposed）', x: '只完成誘導，第 3 個月仍有 Ta HG：尚不屬 BCG-unresponsive（未達「適當 BCG」）。', mg: ['第二次 BCG 誘導或維持（AUA：應提供第二療程）', '或依個別情況 RC', '臨床試驗'] };
+    return { id: 'exposed', sub: 'resistant', t: '第 3 個月仍有 CIS（屬 BCG-exposed）', x: '再給一次 BCG 療程，超過一半可達完全反應；若第 6 個月仍有 CIS 則為 refractory。', mg: ['再一次 BCG 誘導或第一次維持', '第 6 個月再評估'] };
+  }
+  if (tm === '6m') return refr(`再誘導或第一次維持後，第 6 個月仍有 ${f === 'CIS' ? 'CIS' : f === 'TaHG' ? 'Ta HG' : 'T1 HG'}。`);
+  // after completion
+  if (m === null) return { id: null, t: '請輸入完成最後一次 BCG 後幾個月', x: '', mg: [] };
+  const adequate = course === 'adequate';
+  const win = f === 'CIS' ? 12 : 6;
+  if (adequate && m <= win) return { id: 'unresponsive', sub: 'early', t: 'BCG-unresponsive（適當 BCG 後早期復發）', x: `適當 BCG 完成後 ${m} 個月出現 ${f === 'CIS' ? 'CIS（≤12 個月）' : 'Ta/T1 HG（≤6 個月）'}。`, mg: UNR };
+  if (m > 24) return { id: 'late', t: '晚期復發（>24 個月）', x: '可能仍對 BCG 有反應。', mg: ['重複 BCG 療程', '或依個別情況 RC'] };
+  if (adequate) return { id: 'relapsing', t: 'BCG-relapsing／適當 BCG 後延遲復發（屬 BCG-exposed）', x: `完成適當 BCG 後 ${m} 個月高惡性度復發，超出 unresponsive 時間窗。`, mg: ['RC 或重複 BCG，依個別情況', '臨床試驗', '其他保留膀胱策略'] };
+  return { id: 'exposed', sub: 'delayed-inadequate', t: '未達適當 BCG 後延遲復發（屬 BCG-exposed）', x: `只接受${course === 'inadeq' ? '不完整' : ''}誘導、第 3 個月無病，於 ${m} 個月後高惡性度復發。`, mg: ['重複 BCG 療程或 RC，依個別情況', '臨床試驗'] };
+}
+
+/* ---------- guided asks ---------- */
+function filled(s, id) { const v = s[id]; return !(v === undefined || v === null || v === '' || v === false); }
+function buildAsks(s, d, R) {
+  const A = [], pend = s._pending || [];
+  const push = (key, t, why, fields, pri) => { if (!pend.includes(key)) A.push({ key, t, why, fields, pri: pri || 'now' }); };
+  if (!s.stage || (!s.g04 && !s.g73 && s.stage !== 'CIS' && s.stage !== 'T2')) {
+    push('path', 'TURBT 病理：分期與分級', '風險分層的核心。WHO 2004/2016 或 1973 分級擇一即可，兩種都有時系統會分別計算並取較高者。', ['stage', 'g04', 'g73']);
+    return A;
+  }
+  if (s.stage === 'T2') return A;
+  if (s.stage !== 'CIS' && !s.cis) push('cis', '是否合併 CIS', '合併 CIS 至少為高風險；T1 HG 合併 CIS 只要再 1 項風險因子即為極高風險。', ['cis']);
+  if (d.rfUnknown) push('rf', 'EAU 臨床風險因子', '年齡 >70、多發、直徑 ≥3 cm，三項的數目決定同一分期分級落在哪一組。', ['age', 'multi', 'size'].filter(f => !filled(s, f)));
+  if (!s.hist) push('hist', '初發或復發', '低風險只適用初發腫瘤；復發者至少為中度風險。', ['hist']);
+  if (!(s.cisPU || s.subtype || s.lvi || s.vhNone)) push('vh', '高危病理特徵', '攝護腺尿道 CIS、高侵襲性組織亞型或 LVI，任一項即為極高風險。', ['cisPU', 'subtype', 'lvi', 'vhNone']);
+  if (!s.complete || !s.muscle) push('qual', '切除品質', '決定是否需要 re-TURBT：切除不完整、無逼尿肌（Ta LG/G1 與原發 CIS 除外）或 T1 都要再切除。', ['complete', 'muscle'].filter(f => !filled(s, f)));
+  if (s.hist === 'recurrent' && !(s.rec1y || s.recFreq || s.ivtFail || s.bcgPrior || s.recNone)) push('recur', '復發史', '用於 IBCG 中度風險細分與 AUA 分層（1 年內復發、BCG 失敗）。', ['rec1y', 'recFreq', 'ivtFail', 'bcgPrior', 'recNone']);
+  const g = R.eau && R.eau.id;
+  if ((g === 'low' || g === 'int') && !s.perf) push('perf', '單次立即灌注的禁忌（選填）', '疑似穿孔或需持續沖洗的出血時不可灌注。', ['perf'], 'later');
+  return A;
+}
+
+function pathSteps(s, d, R) {
+  const st = [];
+  const g = R.eau && R.eau.id;
+  st.push({ t: '病理：分期、分級、CIS', done: !!s.stage && (s.stage === 'CIS' || !!(s.g04 || s.g73)) && (s.stage === 'CIS' || s.stage === 'T2' || !!s.cis), x: s.stage ? [s.stage, s.g04, s.g73].filter(Boolean).join(' ') : '' });
+  st.push({ t: '臨床風險因子與初發／復發', done: !d.rfUnknown && !!s.hist, skip: s.stage === 'T2', x: d.rfUnknown ? '' : `${d.rf} 項風險因子` });
+  st.push({ t: '高危病理特徵', done: !!(s.cisPU || s.subtype || s.lvi || s.vhNone), skip: s.stage === 'T2', x: d.vh.join('、') });
+  st.push({ t: '風險分層', done: !!g && !(R.eau.prov), skip: s.stage === 'T2', x: g ? LABEL[g] : '' });
+  st.push({ t: 're-TURBT 判斷', done: !!(R.re && !R.re.missing), skip: s.stage === 'T2', x: R.re ? (R.re.need ? '需要 re-TURBT' : R.re.missing ? '' : '不需要') : '' });
+  st.push({ t: '術後灌注與輔助治療', done: !!(R.tx && g && !R.eau.prov), skip: s.stage === 'T2', x: '' });
+  st.push({ t: '追蹤排程', done: !!(R.fu && g && !R.eau.prov), skip: s.stage === 'T2', x: R.fu ? { low: '低風險排程', intLG: '中度 Ta LG 排程', intOther: '個別化', high: '高風險排程' }[R.fu.key] : '' });
+  const cur = st.findIndex(x => !x.done && !x.skip); st.forEach((x, i) => { x.now = i === cur; });
+  return st;
+}
+
+function evaluate(s) {
+  s = s || {};
+  const d = derive(s);
+  const R = { d };
+  R.eau = s.stage ? eau(s, d) : null;
+  R.aua = aua(s, d);
+  R.ibcg = ibcg(s);
+  R.re = reTurbt(s, d);
+  const g = R.eau && R.eau.id;
+  R.tx = treatment(s, d, g);
+  R.fu = followUp(s, d, g);
+  R.auaFu = R.aua && R.aua.id ? auaFollow(R.aua.id) : null;
+  R.asks = buildAsks(s, d, R);
+  R.pending = (s._pending || []).slice();
+  R.path = pathSteps(s, d, R);
+  return R;
+}
+
+function summary(s) {
+  const R = evaluate(s), d = R.d, L = ['【NMIBC 決策摘要】'];
+  const path = [s.stage, s.g04, s.g73].filter(Boolean).join(' ');
+  if (path) L.push(`病理：${path}${s.cis === 'yes' ? '＋CIS' : s.cis === 'no' ? '，無 CIS' : ''}${d.vh.length ? '；' + d.vh.join('、') : ''}`);
+  const rf = [d.age !== null && `年齡 ${d.age}`, s.multi && (s.multi === 'multiple' ? '多發' : '單發'), s.size && (s.size === 'ge3' ? '≥3 cm' : '<3 cm'), s.hist && (s.hist === 'primary' ? '初發' : '復發')].filter(Boolean);
+  if (rf.length) L.push('臨床：' + rf.join('、') + `（EAU 風險因子 ${d.rf} 項${d.rfUnknown ? `，${d.rfUnknown} 項未知` : ''}）`);
+  if (R.eau && R.eau.id) L.push(`EAU 2021 風險：${LABEL[R.eau.id]}${R.eau.prov ? '（暫定，' + R.eau.range.map(x => LABEL[x]).join('～') + '）' : ''}`);
+  if (R.aua && R.aua.id) L.push(`AUA 風險：${LABEL[R.aua.id]}`);
+  if (R.re) L.push('re-TURBT：' + (R.re.need ? '需要（' + R.re.eauWhy.join('、') + '），初次切除後 2–6 週' : R.re.missing ? '資料不足' : '不需要'));
+  if (R.tx && R.tx.opts.length) L.push('處置：' + R.tx.opts.filter(o => o.pref).map(o => o.t).join('；'));
+  if (R.fu) L.push('追蹤（EAU）：' + R.fu.eau);
+  const need = R.asks.filter(a => a.pri !== 'later').map(a => a.t);
+  if (need.length) L.push('待補：' + need.join('、'));
+  return L.join('\n');
+}
+
+const api = { F, LAYERS, LABEL, derive, eauCore, eauGroup, eau, aua, ibcg, reTurbt, treatment, followUp, auaFollow, bcgSchedule, bcgFail, evaluate, summary, filled };
+if (typeof module !== 'undefined') module.exports = api;
+return api;
+})();
+/*ENGINE-END*/
+
+/* ===================== UI ===================== */
+const $ = id => document.getElementById(id);
+const esc = x => String(x).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const LS = 'nmibc-case-v1';
+const blank = () => ({ _pending: [], _log: [], _bcg: { years: '1' }, _fail: {} });
+let S = (() => { try { const x = JSON.parse(localStorage.getItem(LS)); if (x && typeof x === 'object') return Object.assign(blank(), x); } catch (e) {} return blank(); })();
+const save = () => { try { localStorage.setItem(LS, JSON.stringify(S)); } catch (e) {} };
+let R = null;
+const LBL = NB.LABEL;
+
+function fieldHTML(id, ctx) {
+  const f = NB.F[id], v = S[id];
+  const da = `data-f="${id}"`;
+  if (f.t === 'chk') return `<label class="check"><input type="checkbox" ${da} ${v ? 'checked' : ''}><span>${esc(f.l)}</span></label>`;
+  const hint = f.h ? `<span class="hint">${esc(f.h)}</span>` : '';
+  if (f.t === 'num') return `<label class="field"><span class="flabel">${esc(f.l)}</span><span class="inl"><input type="number" inputmode="decimal" step="${f.step || 'any'}" ${da} value="${v === undefined || v === null ? '' : esc(v)}">${f.u ? `<span class="u">${esc(f.u)}</span>` : ''}</span>${hint}</label>`;
+  const opts = `<option value="">未輸入</option>` + f.o.map(o => `<option value="${o[0]}" ${v === o[0] ? 'selected' : ''}>${esc(o[1])}</option>`).join('');
+  return `<label class="field ${ctx === 'ask' ? 'wide' : ''}"><span class="flabel">${esc(f.l)}</span><select ${da}>${opts}</select>${hint}</label>`;
+}
+function renderSheet() {
+  $('sheet').innerHTML = NB.LAYERS.map(L => {
+    const ids = Object.keys(NB.F).filter(f => NB.F[f].L === L.n);
+    const nums = ids.filter(f => NB.F[f].t !== 'chk'), chks = ids.filter(f => NB.F[f].t === 'chk');
+    return `<details class="layer" data-layer="${L.n}"><summary><span class="n">${L.n}</span><span class="t">${L.t} <span class="small muted" style="font-weight:400">${L.d}</span></span><span class="lstat pill mute"></span></summary><div class="lb">
+      ${nums.length ? `<div class="grid2">${nums.map(f => fieldHTML(f, 'sheet')).join('')}</div>` : ''}
+      ${chks.length ? `<div>${chks.map(f => fieldHTML(f, 'sheet')).join('')}</div>` : ''}
+    </div></details>`;
+  }).join('');
+}
+function syncSheet() {
+  document.querySelectorAll('#sheet [data-f]').forEach(el => {
+    const v = S[el.dataset.f];
+    if (el.type === 'checkbox') el.checked = !!v;
+    else if (document.activeElement !== el) el.value = v === undefined || v === null ? '' : v;
+  });
+  NB.LAYERS.forEach(L => {
+    const ids = Object.keys(NB.F).filter(f => NB.F[f].L === L.n);
+    const n = ids.filter(f => NB.filled(S, f)).length;
+    const el = document.querySelector(`#sheet details[data-layer="${L.n}"] .lstat`);
+    if (el) el.textContent = n ? `已填 ${n}` : '未填';
+  });
+}
+const alertHTML = i => `<div class="alert ${i.c}"><strong>${esc(i.t)}</strong>${i.x ? `<span class="small">${esc(i.x)}</span>` : ''}</div>`;
+
+function renderStatus() {
+  const e = R.eau;
+  const grp = e && e.id ? `<span class="grp g-${e.id}">EAU ${esc(LBL[e.id])}${e.prov ? '（暫定）' : ''}</span>` : '';
+  const act = R.path.filter(x => !x.skip), done = act.filter(x => x.done).length;
+  const label = S.stage ? [S.stage, S.g04, S.g73].filter(Boolean).join(' ') + (S.cis === 'yes' ? '＋CIS' : '') : '—';
+  $('status').innerHTML = `<div class="kbox" style="font-size:20px">${esc(label)}</div>
+    <div class="grow"><div class="phase">${S.stage === 'T2' ? '肌肉侵犯：不屬 NMIBC' : e && e.id ? '風險分層完成度' : '輸入 TURBT 病理開始'}</div><div class="prog"><i style="width:${Math.round(done / (act.length || 1) * 100)}%"></i></div></div>
+    ${grp}
+    <div class="acts"><button class="btn sm primary" type="button" id="copySum">複製摘要</button><button class="btn sm" type="button" id="resetAll">清除</button></div>`;
+}
+function renderAsks() {
+  const now = R.asks.filter(a => a.pri !== 'later'), later = R.asks.filter(a => a.pri === 'later');
+  $('askCount').textContent = now.length ? `${now.length} 項` : '完成';
+  const card = (a, i) => `<div class="ask ${a.pri === 'later' ? 'later' : ''}" data-ask="${a.key}">
+    <div class="ah"><h4>${i === 0 && a.pri !== 'later' ? '▶ ' : ''}${esc(a.t)}</h4>${a.pri === 'later' ? '<span class="pill mute">選填</span>' : ''}</div>
+    <p class="why">${esc(a.why)}</p>
+    <div class="fields">${a.fields.filter(f => NB.F[f].t !== 'chk').map(f => fieldHTML(f, 'ask')).join('')}</div>
+    ${a.fields.some(f => NB.F[f].t === 'chk') ? `<div class="checks">${a.fields.filter(f => NB.F[f].t === 'chk').map(f => fieldHTML(f, 'ask')).join('')}</div>` : ''}
+    <div class="acts"><button class="btn sm" type="button" data-pend="${a.key}" data-title="${esc(a.t)}">待回報</button></div>
+  </div>`;
+  $('asks').innerHTML = S.stage === 'T2' ? alertHTML({ c: 'stop', t: '≥T2：肌肉侵犯性膀胱癌', x: '不適用 NMIBC 風險分組；請做分期影像並轉介 MIBC 治療。' })
+    : now.length ? now.map(card).join('') : `<div class="alert go"><strong>必要資料已齊全</strong><span class="small">可在右側資料表修改任一項。</span></div>`;
+  $('laterBox').innerHTML = later.length ? `<details class="more" style="margin-top:10px"><summary>選填項目（${later.length}）</summary><div class="asklist" style="margin-top:8px">${later.map(card).join('')}</div></details>` : '';
+  const P = S._pending || [];
+  $('pendCard').hidden = !P.length;
+  $('pending').innerHTML = P.map(k => `<div class="pend"><span>${esc((S._pendT || {})[k] || k)}</span><button class="btn sm" type="button" data-unpend="${k}">結果已出來</button></div>`).join('');
+}
+function renderRisk() {
+  const e = R.eau, a = R.aua, d = R.d;
+  $('riskTag').textContent = e && e.id ? LBL[e.id] : '資料不足';
+  if (!S.stage) { $('riskBox').innerHTML = '<p class="small muted">輸入分期與分級後顯示。</p>'; return; }
+  const miss = { cis: '是否合併 CIS', rf: '臨床風險因子', hist: '初發或復發', grade: '分級', stage: '分期' };
+  let h = `<div class="rg">
+    <div class="m"><span class="k">EAU 2021</span><span class="v">${e && e.id ? esc(LBL[e.id]) : '—'}</span>${e && e.why && e.why.length ? `<div class="why">${e.why.map(w => `<span>${esc(w)}</span>`).join('')}</div>` : ''}</div>
+    <div class="m"><span class="k">AUA/SUO</span><span class="v">${a && a.id ? esc(LBL[a.id]) + (a.prov ? '<small class="muted">（暫定）</small>' : '') : '—'}</span>${a && a.why && a.why.length ? `<div class="why">${a.why.map(w => `<span>${esc(w)}</span>`).join('')}</div>` : a && !a.id ? '<span class="small muted">需 WHO 2004/2016 分級</span>' : ''}</div>
+    <div class="m"><span class="k">EAU 風險因子</span><span class="v">${d.rf} 項${d.rfUnknown ? `<small class="muted">（${d.rfUnknown} 項未知）</small>` : ''}</span>${d.rfList.length ? `<div class="why">${d.rfList.map(w => `<span>${esc(w)}</span>`).join('')}</div>` : ''}</div>
+  </div>`;
+  if (e && e.prov) h += alertHTML({ c: 'warn', t: `暫定：可能為 ${e.range.map(x => LBL[x]).join('、')}`, x: '目前顯示較高的一組；補齊' + e.miss.map(m => miss[m] || m).join('、') + '後確定。' });
+  else if (e && e.miss && e.miss.length && !e.id) h += `<p class="small muted" style="margin-top:8px">尚缺：${e.miss.map(m => miss[m] || m).join('、')}</p>`;
+  if (e && e.disagree) h += alertHTML({ c: 'info', t: `WHO 2004/2016 與 1973 結果不同：${LBL[e.by['04']]} vs ${LBL[e.by['73']]}`, x: 'EAU 表示擇一系統即可；本頁取較高的一組。' });
+  if (e && e.id && e.id !== 'mibc' && !(S.hist === 'recurrent') && !d.vh.length && S.stage !== 'CIS') {
+    const P = { low: ['0.06%', '0.93%', '3.7%'], int: ['1.0%', '4.9%', '8.5%'], high: ['3.5%', '9.6%', '14%'], vhigh: ['16%', '40%', '53%'] }[e.id];
+    h += `<p class="small" style="margin-top:8px">進展機率（WHO 2004/2016，未立即 BCG）：1 年 ${P[0]}、5 年 ${P[1]}、10 年 ${P[2]}</p>`;
+  }
+  if (e && e.id === 'int') {
+    const ib = R.ibcg;
+    h += alertHTML({ c: ib.band === 'high' ? 'warn' : 'info', t: `IBCG 中度風險細分：${ib.n} 項因子${ib.n ? '（' + ib.f.join('、') + '）' : ''}`, x: ib.band === 'low' ? '進展風險與 EAU 低風險相近。' : ib.band === 'high' ? '≥3 項：進展風險與 EAU 高風險相近（EAU 2026 引述 IBCG 驗證研究）。' : '介於兩者之間。復發史未填時此數目可能低估。' });
+  }
+  $('riskBox').innerHTML = h;
+}
+function renderRe() {
+  const r = R.re;
+  $('reCard').hidden = !r;
+  if (!r) return;
+  let h = r.need ? alertHTML({ c: 'stop', t: '需要 re-TURBT：初次切除後 2–6 週，須切除原腫瘤部位', x: 'EAU 理由：' + r.eauWhy.join('、') + '。' })
+    : r.missing ? alertHTML({ c: 'info', t: '請補切除品質', x: '是否完整切除、檢體是否含逼尿肌。' })
+    : alertHTML({ c: 'go', t: 'EAU：不需 re-TURBT', x: r.exemptNote || '切除完整、含逼尿肌、非 T1。' });
+  if (r.auaWhy.length) h += `<p class="small" style="margin-top:8px">AUA：${esc(r.auaWhy.join('；'))}</p>`;
+  if (r.exemptNote && r.need) h += `<p class="small muted" style="margin-top:6px">${esc(r.exemptNote)}</p>`;
+  $('reBox').innerHTML = h;
+}
+function renderTx() {
+  const t = R.tx, g = R.eau && R.eau.id;
+  $('txCard').hidden = !t;
+  if (!t) return;
+  let h = R.eau.prov ? `<p class="small muted" style="margin-bottom:6px">風險分組為暫定，以下依 ${esc(LBL[g])} 列出。</p>` : '';
+  h += `<div class="items">${t.opts.map(o => `<div class="opt ${o.pref ? 'pref' : ''}"><b>${esc(o.t)}${o.pref ? ' <span class="pill go">建議</span>' : ''}</b>${o.x ? `<span>${esc(o.x)}</span>` : ''}</div>`).join('')}</div>`;
+  if (g === 'high' || g === 'vhigh' || (g === 'int')) h += `<p class="small" style="margin-top:8px"><button class="btn sm" type="button" data-goto="bcg">排 BCG 日期 →</button></p>`;
+  if (S.stage === 'T1' && (R.re && R.re.need)) h += `<p class="note" style="margin-top:8px">T1：re-TURBT 若仍為 T1，屬不良預後因子，應重新評估是否直接 RC。</p>`;
+  h += '<p class="small muted" style="margin-top:8px">戒菸諮詢（EAU 強建議）。高、極高風險請經多專科團隊討論。</p>';
+  $('txBox').innerHTML = h;
+}
+function renderFu() {
+  const f = R.fu;
+  $('fuCard').hidden = !f;
+  if (!f) return;
+  let h = alertHTML({ c: 'info', t: 'EAU 2026', x: f.eau });
+  if (R.auaFu) h += alertHTML({ c: 'info', t: `AUA 2024（${LBL[R.aua.id]}）`, x: R.auaFu });
+  $('fuBox').innerHTML = h.replace(/<\/div><div class="alert/g, '</div><div style="height:8px"></div><div class="alert');
+}
+function renderPath() {
+  $('path').innerHTML = R.path.map((p, i) => `<li class="${p.done ? 'done' : ''} ${p.now ? 'now' : ''}"><i>${p.done ? '✓' : p.skip ? '–' : i + 1}</i><div>${esc(p.t)}${p.skip ? ' <span class="pl">不適用</span>' : ''}${p.x && !p.skip ? `<div class="pl">${esc(p.x)}</div>` : ''}</div></li>`).join('');
+}
+function renderLog() {
+  const L = S._log || [];
+  $('log').innerHTML = L.length ? L.slice().reverse().map(e => `<div><span class="mono">${new Date(e.t).toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' })}</span><span>${esc(e.m)}</span></div>`).join('') : '<p class="small muted">每次填寫或修改資料都會記錄在這裡。</p>';
+}
+function renderTables() {
+  const g = R.eau && R.eau.id, a = R.aua && R.aua.id, fk = R.fu && R.fu.key;
+  document.querySelectorAll('tr[data-g]').forEach(tr => tr.classList.toggle('hl', tr.dataset.g === g));
+  document.querySelectorAll('tr[data-a]').forEach(tr => tr.classList.toggle('hl', tr.dataset.a === a));
+  document.querySelectorAll('tr[data-fu]').forEach(tr => tr.classList.toggle('hl', tr.dataset.fu === fk));
+  document.querySelectorAll('tr[data-af]').forEach(tr => tr.classList.toggle('hl', tr.dataset.af === a));
+  $('auaTag').textContent = a ? LBL[a] : '未計算';
+  const ib = R.ibcg;
+  $('ibcgTag').textContent = `${ib.n} 項`;
+  $('ibcgBox').innerHTML = g === 'int' ? `<p class="small">本例：${ib.n ? esc(ib.f.join('、')) : '無'}</p>` : '<p class="small muted">僅用於 EAU 中度風險。</p>';
+}
+
+function renderAll() {
+  const f = focusMark();
+  R = NB.evaluate(S);
+  renderStatus(); renderAsks(); renderRisk(); renderRe(); renderTx(); renderFu(); renderPath(); syncSheet(); renderLog(); renderTables(); renderBcg(); renderFail();
+  save();
+  focusRestore(f);
+}
+function focusMark() {
+  const ae = document.activeElement;
+  if (!ae || ae === document.body || !ae.closest) return null;
+  const card = ae.closest('#asks .ask');
+  const sel = ae.dataset.f ? `[data-f="${ae.dataset.f}"]` : ae.dataset.pend ? `[data-pend="${ae.dataset.pend}"]` : null;
+  return { sel, zone: card ? '#asks' : ae.closest('#sheet') ? '#sheet' : null, key: card && card.dataset.ask, idx: card ? [...document.querySelectorAll('#asks .ask')].indexOf(card) : -1 };
+}
+function focusRestore(m) {
+  if (!m) return;
+  const el = m.sel && m.zone && document.querySelector(`${m.zone} ${m.sel}`);
+  if (el) { if (el !== document.activeElement) el.focus({ preventScroll: true }); return; }
+  if (m.zone !== '#asks') return;
+  const cards = [...document.querySelectorAll('#asks .ask')];
+  if (!cards.length) return;
+  const c = cards.find(x => x.dataset.ask === m.key) || cards[Math.min(Math.max(m.idx, 0), cards.length - 1)];
+  const f = c.querySelector('[data-f]');
+  if (f) f.focus({ preventScroll: true });
+}
+
+function labelOf(id, v) {
+  const f = NB.F[id];
+  if (f.t === 'chk') return v ? '勾選' : '取消';
+  if (f.t === 'sel') { const o = f.o.find(o => o[0] === v); return o ? o[1] : '清除'; }
+  return v === '' ? '清除' : v + (f.u ? ' ' + f.u : '');
+}
+function setField(id, el) {
+  const f = NB.F[id];
+  let v;
+  if (f.t === 'chk') v = el.checked;
+  else if (f.t === 'num') v = el.value === '' ? '' : Number(el.value);
+  else v = el.value;
+  if (S[id] === v || (S[id] === undefined && (v === '' || v === false))) return;
+  S[id] = v === '' ? undefined : v;
+  if (f.t === 'chk' && v) {
+    if (id === 'vhNone') S.cisPU = S.subtype = S.lvi = false;
+    if (['cisPU', 'subtype', 'lvi'].includes(id)) S.vhNone = false;
+    if (id === 'recNone') S.rec1y = S.recFreq = S.ivtFail = S.bcgPrior = false;
+    if (['rec1y', 'recFreq', 'ivtFail', 'bcgPrior'].includes(id)) S.recNone = false;
+  }
+  S._log.push({ t: Date.now(), m: `${f.l.split('（')[0]}：${labelOf(id, v)}` });
+  if (S._log.length > 300) S._log = S._log.slice(-300);
+  setTimeout(renderAll, 0);
+}
+document.addEventListener('change', e => { const el = e.target.closest('[data-f]'); if (el && el.closest('#asks, #sheet')) setField(el.dataset.f, el); });
+document.addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.matches('input[type=number][data-f]')) { e.preventDefault(); e.target.blur(); } });
+document.addEventListener('click', e => {
+  const p = e.target.closest('[data-pend]');
+  if (p) { S._pending = [...new Set([...(S._pending || []), p.dataset.pend])]; S._pendT = Object.assign(S._pendT || {}, { [p.dataset.pend]: p.dataset.title }); S._log.push({ t: Date.now(), m: `${p.dataset.title}：待回報` }); renderAll(); toast('已標記待回報'); return; }
+  const u = e.target.closest('[data-unpend]');
+  if (u) { const k = u.dataset.unpend; S._pending = (S._pending || []).filter(x => x !== k); renderAll(); const el = document.querySelector(`[data-ask="${k}"] [data-f]`); if (el) { el.closest('.ask').scrollIntoView({ block: 'center', behavior: 'smooth' }); el.focus(); el.closest('.ask').classList.add('flash'); } return; }
+  const gt = e.target.closest('[data-goto]'); if (gt) { showTab(gt.dataset.goto); return; }
+  if (e.target.id === 'copySum') { copyText(NB.summary(S)); return; }
+  if (e.target.id === 'resetAll') { if (confirm('清除所有輸入？')) { S = blank(); renderAll(); toast('已清除'); } return; }
+  if (e.target.id === 'expandAll') { const ds = [...document.querySelectorAll('#sheet details.layer')]; const open = !ds.every(x => x.open); ds.forEach(x => x.open = open); e.target.textContent = open ? '全部收合' : '全部展開'; return; }
+  const c = e.target.closest('[data-case]'); if (c) { loadCase(+c.dataset.case); return; }
+});
+
+/* ---------- BCG schedule tab ---------- */
+function renderBcg() {
+  const B = S._bcg || (S._bcg = { years: '1' });
+  if (document.activeElement !== $('bTurbt')) $('bTurbt').value = B.turbt || '';
+  if (document.activeElement !== $('bStart')) $('bStart').value = B.start || '';
+  $('bYears').value = B.years || '1';
+  const g = R && R.eau && R.eau.id;
+  $('bYearsHint').textContent = g === 'int' ? '中度風險：1 年' : g === 'high' || g === 'vhigh' ? '高／極高風險：1–3 年' : g === 'low' ? '低風險不需 BCG' : '';
+  const sc = NB.bcgSchedule(B.start, Number(B.years || 1), B.turbt);
+  if (!sc) { $('bOut').innerHTML = '<p class="small muted">輸入誘導第一劑日期。</p>'; return; }
+  const wd = ds => '日一二三四五六'[new Date(ds + 'T00:00:00').getDay()];
+  let h = sc.warn.map(w => alertHTML({ c: 'stop', t: w })).join('');
+  h += `<p class="small" style="margin:6px 0">共 ${sc.total} 劑（誘導 6＋維持 ${sc.total - 6}）。週末日期請自行調整到可施打日。</p>`;
+  h += `<div class="tablebox"><table><thead><tr><th>階段</th><th>劑次</th><th>日期</th></tr></thead><tbody>${sc.rows.map(r => `<tr><td>${esc(r.phase)}</td><td class="mono">${r.n}</td><td class="mono">${r.date}（${wd(r.date)}）</td></tr>`).join('')}</tbody></table></div>`;
+  $('bOut').innerHTML = h;
+}
+document.addEventListener('change', e => {
+  const id = e.target.id; if (!['bTurbt', 'bStart', 'bYears'].includes(id)) return;
+  S._bcg = S._bcg || {}; S._bcg[{ bTurbt: 'turbt', bStart: 'start', bYears: 'years' }[id]] = e.target.value; save(); renderBcg();
+});
+
+/* ---------- BCG failure tab ---------- */
+const FF = [
+  { id: 'course', l: '已接受的 BCG', o: [['', '請選擇'], ['adequate', '適當 BCG：誘導 ≥5/6＋維持 ≥2/3 或第二次誘導 ≥2/6'], ['ind', '只完成誘導（≥5/6）'], ['inadeq', '誘導未達 5/6']] },
+  { id: 'finding', l: '發現', o: [['', '請選擇'], ['none', '無殘留或復發'], ['LG', '低惡性度（LG）'], ['TaHG', 'Ta HG/G3'], ['T1HG', 'T1 HG/G3'], ['CIS', 'CIS（± 乳突狀）'], ['MIBC', '肌肉侵犯（≥T2）']] },
+  { id: 'timing', l: '時間點', o: [['', '請選擇'], ['3m', '誘導後第 3 個月評估'], ['6m', '再誘導或第一次維持後的第 6 個月評估'], ['maint', '維持治療期間'], ['after', '完成最後一次 BCG 之後']] },
+  { id: 'months', l: '完成最後一次 BCG 後幾個月', num: 1, when: 'after' },
+  { id: 'intol', l: 'BCG 嚴重不耐受，無法完成', yn: 1 }
+];
+function renderFail() {
+  const B = S._fail || (S._fail = {});
+  $('fForm').innerHTML = FF.filter(f => !f.when || B.timing === f.when).map(f => {
+    if (f.num) return `<label class="field"><span class="flabel">${esc(f.l)}</span><span class="inl"><input type="number" step="1" inputmode="numeric" data-ff="${f.id}" value="${esc(B[f.id] ?? '')}"><span class="u">個月</span></span></label>`;
+    if (f.yn) return `<label class="check" style="grid-column:1/-1"><input type="checkbox" data-ff="${f.id}" ${B[f.id] ? 'checked' : ''}><span>${esc(f.l)}</span></label>`;
+    return `<label class="field"><span class="flabel">${esc(f.l)}</span><select data-ff="${f.id}">${f.o.map(o => `<option value="${o[0]}" ${(B[f.id] || '') === o[0] ? 'selected' : ''}>${esc(o[1])}</option>`).join('')}</select></label>`;
+  }).join('');
+  const r = NB.bcgFail(B);
+  if (!r) { $('fOut').innerHTML = '<p class="small muted">選擇已接受的 BCG 療程與發現。</p>'; return; }
+  const c = { unresponsive: 'stop', mibc: 'stop', exposed: 'warn', relapsing: 'warn', late: 'info', lg: 'go', cr: 'go', intol: 'warn' }[r.id] || 'info';
+  $('fOut').innerHTML = alertHTML({ c, t: r.t, x: r.x }) + (r.mg && r.mg.length ? `<div class="sub-h">處置選項（EAU 2026 Table 7.5、AUA 2024）</div><ul class="plain">${r.mg.map(x => `<li>${esc(x)}</li>`).join('')}</ul>` : '');
+}
+document.addEventListener('change', e => {
+  const el = e.target.closest('[data-ff]'); if (!el) return;
+  const id = el.dataset.ff; S._fail = S._fail || {};
+  S._fail[id] = el.type === 'checkbox' ? el.checked : el.value;
+  save();
+  setTimeout(() => { const a = document.activeElement, k = a && a.dataset ? a.dataset.ff : null; renderFail(); const e2 = k && document.querySelector(`#fForm [data-ff="${k}"]`); if (e2) e2.focus({ preventScroll: true }); }, 0);
+});
+
+function copyText(t) {
+  const done = () => toast('摘要已複製，可貼到病歷');
+  if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(t).then(done, () => fallback());
+  else fallback();
+  function fallback() { const ta = document.createElement('textarea'); ta.value = t; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); done(); } catch (e) { toast('無法複製'); } ta.remove(); }
+}
+let tt; function toast(m) { const el = $('toast'); el.textContent = m; el.classList.add('show'); clearTimeout(tt); tt = setTimeout(() => el.classList.remove('show'), 1800); }
+
+/* tabs */
+const TABS = ['ws', 'risk', 'bcg', 'fail', 'fu', 'cases', 'ref'];
+function showTab(t) {
+  TABS.forEach(x => { $(x).hidden = x !== t; $('tab-' + x).setAttribute('aria-selected', x === t); $('tab-' + x).tabIndex = x === t ? 0 : -1; });
+  try { localStorage.setItem(LS + '-tab', t); } catch (e) {}
+  window.scrollTo({ top: 0 });
+}
+document.querySelector('.tabs').addEventListener('click', e => { const b = e.target.closest('.tab'); if (b) showTab(b.dataset.t); });
+document.querySelector('.tabs').addEventListener('keydown', e => {
+  if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+  const i = TABS.indexOf(document.querySelector('.tab[aria-selected="true"]').dataset.t);
+  const n = TABS[(i + (e.key === 'ArrowRight' ? 1 : TABS.length - 1)) % TABS.length]; showTab(n); $('tab-' + n).focus();
+});
+
+/* example cases */
+const OK = { vhNone: true, complete: 'yes', muscle: 'yes' };
+const CASES = [
+  { t: '初次接觸：只有病理', d: 'TURBT 報告：Ta、低惡性度。其他資料都還沒整理，看系統如何一步步引導。', s: { stage: 'Ta', g04: 'LG' } },
+  { t: '低風險', d: '62 歲，初發單一 1.5 cm Ta LG，無 CIS，完整切除且含逼尿肌。', s: { stage: 'Ta', g04: 'LG', g73: 'G1', cis: 'no', age: 62, multi: 'single', size: 'lt3', hist: 'primary', ...OK } },
+  { t: '中度風險、IBCG 3 項', d: '68 歲，Ta LG 多發、最大 3.5 cm，距上次 TURBT 8 個月復發，曾做膀胱內化療。', s: { stage: 'Ta', g04: 'LG', cis: 'no', age: 68, multi: 'multiple', size: 'ge3', hist: 'recurrent', rec1y: true, ivtFail: true, ...OK } },
+  { t: 'Ta HG、無逼尿肌', d: '66 歲，初發單一 2 cm Ta HG，無 CIS，檢體沒有逼尿肌。', s: { stage: 'Ta', g04: 'HG', g73: 'G3', cis: 'no', age: 66, multi: 'single', size: 'lt3', hist: 'primary', vhNone: true, complete: 'yes', muscle: 'no' } },
+  { t: '高風險 T1 HG', d: '64 歲，初發單一 2.5 cm T1 HG，無 CIS，完整切除含逼尿肌。', s: { stage: 'T1', g04: 'HG', g73: 'G3', cis: 'no', age: 64, multi: 'single', size: 'lt3', hist: 'primary', ...OK } },
+  { t: '極高風險 T1 HG＋CIS', d: '74 歲，T1 HG 合併 CIS，單發 2 cm。年齡 >70 一項風險因子。', s: { stage: 'T1', g04: 'HG', g73: 'G3', cis: 'yes', age: 74, multi: 'single', size: 'lt3', hist: 'primary', ...OK } },
+  { t: 'WHO 兩套分級結果不同', d: '72 歲，初發 Ta、WHO 2004 為 LG、1973 為 G1，多發、4 cm（3 項風險因子）。2004 判為高風險、1973 判為中度。', s: { stage: 'Ta', g04: 'LG', g73: 'G1', cis: 'no', age: 72, multi: 'multiple', size: 'ge3', hist: 'primary', ...OK } },
+  { t: 'LVI', d: '69 歲，Ta HG 單發 2 cm，病理有淋巴血管侵犯。', s: { stage: 'Ta', g04: 'HG', cis: 'no', age: 69, multi: 'single', size: 'lt3', hist: 'primary', lvi: true, complete: 'yes', muscle: 'yes' } }
+];
+function renderCases() {
+  $('caseList').innerHTML = CASES.map((c, i) => `<div class="card case"><div style="display:flex;justify-content:space-between;gap:8px;align-items:baseline"><h3 style="font-size:15.5px">${esc(c.t)}</h3><span class="sample">示例</span></div><p class="small muted">${esc(c.d)}</p><div><button class="btn primary sm" type="button" data-case="${i}">載入此病例</button></div></div>`).join('');
+}
+function loadCase(i) {
+  const c = CASES[i];
+  S = Object.assign(blank(), JSON.parse(JSON.stringify(c.s)), { _bcg: S._bcg, _fail: S._fail });
+  S._log.push({ t: Date.now(), m: `載入示例：${c.t}` });
+  renderAll(); showTab('ws'); toast('已載入示例：' + c.t);
+}
+
+const REFS = [
+  ['EAU Guidelines on Non-muscle-invasive Bladder Cancer (TaT1 and CIS). European Association of Urology, 2026 edition（2026 年 3 月更新）.', 'https://uroweb.org/guidelines/non-muscle-invasive-bladder-cancer'],
+  ['Sylvester RJ, Rodríguez O, Hernández V, et al. European Association of Urology (EAU) prognostic factor risk groups for non-muscle-invasive bladder cancer (NMIBC) incorporating the WHO 2004/2016 and WHO 1973 classification systems for grade: an update from the EAU NMIBC Guidelines Panel. Eur Urol 2021;79:480–488.', 'https://doi.org/10.1016/j.eururo.2020.12.033'],
+  ['EAU NMIBC 2021 risk group calculator.', 'https://www.nmibc.net'],
+  ['Holzbeierlein J, Bixler BR, Buckley DI, et al. Diagnosis and Treatment of Non-Muscle Invasive Bladder Cancer: AUA/SUO Guideline: 2024 Amendment. J Urol 2024;211:533–538.', 'https://www.auanet.org/guidelines-and-quality/guidelines/non-muscle-invasive-bladder-cancer'],
+  ['2026 Updates to the Diagnosis and Treatment of Non-muscle Invasive Bladder Cancer: AUA/SUO Guideline. J Urol 2026（本頁未取得全文）.', 'https://www.auajournals.org/doi/abs/10.1097/JU.0000000000005280'],
+  ['Tan WS, Steinberg G, Witjes JA, et al. Intermediate-risk non-muscle-invasive bladder cancer: updated consensus definition and management recommendations from the International Bladder Cancer Group. Eur Urol Oncol 2022;5:505–516.', 'https://doi.org/10.1016/j.euo.2022.05.005'],
+  ['Lamm DL, Blumenstein BA, Crissman JD, et al. Maintenance bacillus Calmette-Guérin immunotherapy for recurrent Ta, T1 and carcinoma in situ transitional cell carcinoma of the bladder (SWOG 8507). J Urol 2000;163:1124–1129.', 'https://doi.org/10.1016/S0022-5347(05)67707-5'],
+  ['Kamat AM, Sylvester RJ, Böhle A, et al. Definitions, end points, and clinical trial designs for non-muscle-invasive bladder cancer: recommendations from the International Bladder Cancer Group. J Clin Oncol 2016;34:1935–1944.', 'https://doi.org/10.1200/JCO.2015.64.4070']
+];
+$('refList').innerHTML = REFS.map(r => `<li>${esc(r[0])} <a href="${r[1]}" target="_blank" rel="noopener">連結</a></li>`).join('');
+
+renderSheet(); renderCases(); renderAll();
+(() => { let t = 'ws'; try { t = localStorage.getItem(LS + '-tab') || 'ws'; } catch (e) {} showTab(TABS.includes(t) ? t : 'ws'); })();
+document.querySelectorAll('#sheet details.layer').forEach((dt, i) => { if (i < 2) dt.open = true; });
+</script>
+</body>
+</html>
