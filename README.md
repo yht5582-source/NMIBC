@@ -15,8 +15,25 @@
 3. BCG 排程：輸入誘導第一劑日期，算出誘導 6 週與 SWOG 維持（第 3、6、12、18、24、30、36 個月）的每一劑日期；TURBT 後未滿 2 週會警示
 4. BCG 失敗分類：依 EAU 2026 Table 7.2 判斷 refractory、relapsing、unresponsive、exposed，並列出 Table 7.5 的處置選項
 5. 追蹤排程：EAU 2026 與 AUA 2024 膀胱鏡與上泌尿道影像
-6. 示例病例（虛構教學資料）
-7. 參考文獻
+6. 示範病例：8 例（低、中、高、極高風險與 BCG-unresponsive），工具結果由引擎即時算出，可帶入工具並標示「示範病例」
+7. 考題：基礎 10 題、高階 10 題，固定順序，A–D 各 5 題，附解析與出處，作答不儲存
+8. 心智圖：8 個分支，可收合
+9. 參考文獻
+
+網址可加 `#cases`、`#quiz`、`#map` 等直接開啟分頁。
+
+## v2.0 修正（2026-11-05）
+
+- 曾接受 BCG 後高惡性度復發時，不再把 BCG 標為建議，改先做失敗分類，也不再列 BCG-naïve 才適用的免疫合併療法
+- 改回初發後，先前勾選的復發史不再影響 IBCG、AUA 與治療
+- 門診電燒、主動監測只列給 LG Ta；小型晚期復發的單次灌注會檢查大小與復發史（≥3 cm 不算小，EAU 未定義「小」，這是工具的假設）
+- 復發 >1 次／年 標示單獨單次灌注無效；膀胱內化療失敗的中度風險改以 BCG 為首選
+- AUA 的「HG Ta 考慮再切除」只在 AUA 高風險時出現；無逼尿肌的 re-TURBT 豁免只限原發 CIS
+- 單純 CIS 不再詢問乳突狀腫瘤數目與大小
+- 只有 WHO 1973 的 Ta G2 使用中度 Ta 追蹤排程；進展機率依所用的 WHO 系統顯示
+- BCG 失敗：未選療程時不分類，負值月數視為未輸入；BCG 日期早於 TURBT 會提示日期錯誤
+- 待回報：全部待回報時不再顯示「資料已齊全」，填寫後自動解除，並列入摘要
+- 不合理年齡視為未知；localStorage 損毀不再讓頁面出錯；紀錄加上日期；深色模式極高風險標籤對比修正
 
 ## 開發
 
@@ -26,11 +43,13 @@
 node tests.cjs
 ```
 
+測試含 77,760 種輸入組合的安全檢查，並用引擎核對病例與考題答案。教學內容在 `/*TEACH-START*/ … /*TEACH-END*/`。
+
 ## 主要參考
 
 - EAU Guidelines on Non-muscle-invasive Bladder Cancer, 2026（2026 年 3 月更新）
 - Sylvester RJ, et al. EAU NMIBC prognostic factor risk groups. Eur Urol 2021;79:480–488
-- AUA/SUO Diagnosis and Treatment of NMIBC Guideline, 2024 Amendment（2026 年修訂全文須會員登入，未核對）
+- AUA/SUO Diagnosis and Treatment of NMIBC Guideline, 2024 Amendment（2026 年修訂全文須登入；摘要指出風險分層有更新，本頁尚未依此修改）
 - IBCG intermediate-risk consensus, Eur Urol Oncol 2022
 - SWOG 8507 maintenance BCG, J Urol 2000
 

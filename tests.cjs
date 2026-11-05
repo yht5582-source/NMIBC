@@ -88,7 +88,12 @@ t('T1 → re-TURBT', () => assert.ok(RE({ stage: 'T1', g04: 'HG' }).need));
 t('incomplete or doubtful resection → re-TURBT', () => { assert.ok(RE({ stage: 'Ta', g04: 'LG', complete: 'no' }).need); assert.ok(RE({ stage: 'Ta', g04: 'LG', complete: 'doubt' }).need); });
 t('no muscle in Ta HG → re-TURBT; in Ta LG → exempt', () => { assert.ok(RE({ stage: 'Ta', g04: 'HG', muscle: 'no' }).need); const r = RE({ stage: 'Ta', g04: 'LG', muscle: 'no' }); assert.ok(!r.need); assert.ok(r.exemptNote); });
 t('no muscle in primary CIS → exempt', () => assert.ok(!RE({ stage: 'CIS', muscle: 'no' }).need));
-t('complete Ta HG with muscle → EAU no, AUA consider', () => { const r = RE({ stage: 'Ta', g04: 'HG' }); assert.ok(!r.need); assert.ok(r.auaWhy.some(x => /HG Ta/.test(x))); });
+t('complete Ta HG with muscle → EAU no; AUA consider only when AUA high risk', () => {
+  const small = RE({ stage: 'Ta', g04: 'HG' }); assert.ok(!small.need); assert.ok(!small.auaWhy.some(x => /HG Ta/.test(x)));
+  const multi = RE({ stage: 'Ta', g04: 'HG', multi: 'multiple' }); assert.ok(!multi.need); assert.ok(multi.auaWhy.some(x => /HG Ta/.test(x)));
+});
+t('no muscle in recurrent pure CIS → re-TURBT (exemption is primary CIS only)', () => assert.ok(RE({ stage: 'CIS', muscle: 'no', hist: 'recurrent' }).need));
+t('T1 or any CIS → prostatic urethra biopsy prompt; Ta without CIS → none', () => { assert.ok(RE({ stage: 'T1', g04: 'HG' }).pu); assert.ok(RE({ stage: 'Ta', g04: 'HG', cis: 'yes' }).pu); assert.ok(!RE({ stage: 'Ta', g04: 'HG' }).pu); });
 
 console.log('Treatment & follow-up');
 const TX = x => ev({ ...B, ...x }).tx;
@@ -129,6 +134,109 @@ console.log('Summary');
 t('summary includes EAU group, re-TURBT and follow-up', () => {
   const s = NB.summary({ ...B, ...RF(0), stage: 'T1', g04: 'HG' });
   assert.match(s, /EAU 2021 風險：高風險/); assert.match(s, /re-TURBT：需要/); assert.match(s, /追蹤（EAU）/);
+});
+
+console.log('v2.0 regressions');
+const prefs = r => r.tx.opts.filter(o => o.pref).map(o => o.t);
+t('progression table matches EAU 2026 Table 6.3 for both WHO systems', () => {
+  assert.deepEqual(NB.PROG['04'].vhigh, ['16%', '40%', '53%']); assert.deepEqual(NB.PROG['73'].vhigh, ['20%', '44%', '59%']);
+  assert.deepEqual(NB.PROG['04'].low, ['0.06%', '0.93%', '3.7%']); assert.deepEqual(NB.PROG['73'].int, ['0.65%', '3.6%', '7.4%']);
+});
+t('WHO 1973 only → result carries sys 73 so the 1973 progression row is used', () => assert.equal(ev({ ...B, ...RF(1), stage: 'T1', g73: 'G2' }).eau.sys, '73'));
+t('BCG failure on a high-risk tumour → BCG not preferred, classify first, no BCG-naive ICI option', () => {
+  const r = ev({ ...B, ...RF(0), stage: 'T1', g04: 'HG', hist: 'recurrent', bcgPrior: true });
+  assert.match(prefs(r)[0], /失敗分類/); assert.ok(!prefs(r).some(x => /全劑量 BCG/.test(x))); assert.ok(!r.tx.opts.some(o => /檢查點/.test(o.t)));
+});
+t('BCG-naive high risk → ICI option mentions maintenance', () => { const o = ev({ ...B, ...RF(0), stage: 'T1', g04: 'HG' }).tx.opts.find(x => /檢查點/.test(x.t)); assert.ok(o); assert.match(o.t + o.x, /維持/); });
+t('stale recurrence boxes ignored once tumour is primary', () => {
+  const r = ev({ ...B, ...RF(1), stage: 'Ta', g04: 'HG', hist: 'primary', bcgPrior: true, rec1y: true, ivtFail: true });
+  assert.equal(r.ibcg.n, 0); assert.ok(!prefs(r).some(x => /失敗分類/.test(x))); assert.ok(!r.aua.why.some(x => /BCG/.test(x)));
+});
+t('chemo failure, intermediate → BCG 1 year preferred over more chemo', () => { const p = prefs(ev({ ...B, ...RF(2), stage: 'Ta', g04: 'LG', hist: 'recurrent', ivtFail: true })); assert.ok(p.some(x => /BCG 1 年/.test(x))); assert.ok(!p.some(x => /化療，誘導/.test(x))); });
+t('small late LG recurrence → single instillation; ≥3 cm or early or frequent → not', () => {
+  const base = { ...B, ...RF(0), stage: 'Ta', g04: 'LG', hist: 'recurrent', recNone: true };
+  assert.ok(prefs(ev(base)).some(x => /小型 LG 復發/.test(x)));
+  assert.ok(!ev({ ...base, size: 'ge3' }).tx.opts.some(x => /小型 LG 復發/.test(x.t)));
+  assert.ok(!ev({ ...base, rec1y: true, recNone: false }).tx.opts.some(x => /小型 LG 復發/.test(x.t)));
+  assert.ok(ev({ ...base, recFreq: true, recNone: false }).tx.opts.some(x => /單獨使用無效/.test(x.t)));
+});
+t('office fulguration / surveillance offered only for LG Ta, not T1 LG or Ta HG', () => {
+  const has = x => ev({ ...B, ...x }).tx.opts.some(o => /電燒/.test(o.t));
+  assert.ok(has({ ...RF(2), stage: 'Ta', g04: 'LG' })); assert.ok(!has({ ...RF(1), stage: 'T1', g04: 'LG' })); assert.ok(!has({ ...RF(0), stage: 'Ta', g04: 'HG' }));
+});
+t('Ta G2 reported only in WHO 1973 → intermediate Ta schedule', () => assert.equal(ev({ ...B, ...RF(0), stage: 'Ta', g73: 'G2' }).fu.key, 'intLG'));
+t('pure CIS does not ask papillary number or size, and step 2 can complete', () => {
+  const r = ev({ stage: 'CIS', hist: 'primary', vhNone: true, complete: 'yes', muscle: 'yes' });
+  assert.ok(!keys(r).includes('rf')); assert.ok(r.path[1].done);
+});
+t('T2 completes the first path step', () => assert.ok(ev({ stage: 'T2' }).path[0].done));
+t('invalid age treated as unknown and asked again', () => {
+  const r = ev({ ...B, multi: 'single', size: 'lt3', stage: 'T1', g04: 'HG', age: 900 });
+  assert.equal(r.d.age, null); assert.ok(r.d.ageBad); assert.deepEqual(r.asks.find(a => a.key === 'rf').fields, ['age']);
+  assert.ok(!ev({ age: 70 }).d.ageBad); assert.equal(ev({ age: 71 }).d.rf, 1); assert.equal(ev({ age: 70 }).d.rf, 0);
+});
+t('pending item clears once its ask is answered, stays while unanswered', () => {
+  assert.deepEqual(NB.prunePending({ stage: 'T1', g04: 'HG', cis: 'no', _pending: ['cis', 'hist'] }), ['hist']);
+  assert.deepEqual(NB.prunePending({ _pending: ['path'] }), ['path']);
+});
+t('summary labels demo, lists pending and BCG failure class', () => {
+  const s = NB.summary({ ...B, ...RF(0), stage: 'CIS', _demo: 8, hist: 'recurrent', _pending: ['qual'], _pendT: { qual: '切除品質' }, _fail: { course: 'adequate', finding: 'CIS', timing: '6m' } });
+  assert.match(s, /示範病例/); assert.match(s, /待回報：切除品質/); assert.match(s, /BCG 失敗分類：BCG-refractory/);
+  assert.ok(!/示範/.test(NB.summary({ stage: 'T2' })));
+});
+t('BCG before TURBT date warns about the dates, not a negative day count', () => { const w = NB.bcgSchedule('2026-11-02', 1, '2026-11-10').warn; assert.equal(w.length, 1); assert.match(w[0], /早於/); });
+t('after-BCG timing needs a course before classifying', () => { const r = BF({ finding: 'TaHG', timing: 'after', months: 10 }); assert.equal(r.id, null); assert.match(r.t, /療程/); assert.equal(BF({ course: 'adequate', finding: 'TaHG', timing: 'after', months: -1 }).id, null); });
+
+t('trial numbers follow the primary papers where they differ from the guideline text', () => {
+  const ici = ev({ ...B, ...RF(0), stage: 'T1', g04: 'HG' }).tx.opts.find(x => /檢查點/.test(x.t)).x;
+  assert.match(ici, /29\.1%/); assert.doesNotMatch(ici, /29\.8%/);
+  assert.ok(/EORTC 復發分數 ≥5/.test(html)); assert.ok(!/或 EORTC 復發分數 >5/.test(html)); assert.ok(!/86\.5%/.test(html));
+});
+
+console.log('Exhaustive input sweep');
+t('no combination throws; asks have fields; BCG-failure tumours never get BCG as preferred', () => {
+  const stages = ['Ta', 'T1', 'CIS', 'T2'], g04s = [undefined, 'PUNLMP', 'LG', 'HG'], g73s = [undefined, 'G1', 'G2', 'G3'], cis = [undefined, 'no', 'yes'], age = [undefined, 60, 75], multi = [undefined, 'single', 'multiple'], size = [undefined, 'lt3', 'ge3'], hist = [undefined, 'primary', 'recurrent'], flags = [{}, { lvi: true }, { bcgPrior: true }, { recFreq: true }, { perf: true }];
+  let n = 0;
+  for (const st of stages) for (const a of g04s) for (const b of g73s) for (const c of cis) for (const ag of age) for (const m of multi) for (const z of size) for (const h of hist) for (const f of flags) {
+    const s = { stage: st, g04: a, g73: b, cis: c, age: ag, multi: m, size: z, hist: h, ...f };
+    const r = ev(s); n++;
+    r.asks.forEach(q => assert.ok(q.fields.length, q.key));
+    NB.summary(s);
+    if (r.tx && f.bcgPrior && h === 'recurrent' && r.eau.id !== 'low') assert.ok(!prefs(r).some(x => /BCG/.test(x) && !/失敗分類/.test(x)), JSON.stringify(s));
+    if (r.tx && f.perf && r.eau.id !== 'mibc') assert.ok(!prefs(r).some(x => /單次立即/.test(x)), JSON.stringify(s));
+    if (r.eau && r.eau.id && r.eau.id !== 'mibc' && !r.eau.prov && h === 'recurrent') assert.notEqual(r.eau.id, 'low', JSON.stringify(s));
+    if (r.eau && f.lvi && st !== 'T2') assert.equal(r.eau.id, 'vhigh');
+    if (r.eau && r.eau.id === 'vhigh') assert.ok(r.tx.opts[0].pref);
+  }
+  console.log('    ' + n + ' combinations');
+});
+
+console.log('Teaching content');
+const tm = html.match(/\/\*TEACH-START\*\/([\s\S]*?)\/\*TEACH-END\*\//);
+if (!tm) throw new Error('teach block not found');
+const { CASES, QUIZ, MINDMAP } = new Function(tm[1] + ';return { CASES, QUIZ, MINDMAP };')();
+t('8 cases with unique ids and at least 3 teaching points', () => { assert.equal(CASES.length, 8); assert.equal(new Set(CASES.map(c => c.id)).size, 8); CASES.forEach(c => assert.ok(c.points.length >= 3 && c.story, c.id)); });
+CASES.forEach(c => t(`case ${c.id} (${c.tag}) matches its engine output`, () => {
+  const r = ev(c.s), x = c.expect;
+  assert.equal(r.eau.id, x.eau); assert.equal(r.aua.id, x.aua); assert.equal(!!r.re.need, x.re); assert.equal(r.fu.key, x.fu);
+  assert.ok(!r.eau.prov); assert.ok(!r.aua.prov);
+  assert.ok(r.tx.opts.filter(o => o.pref).some(o => x.pref.test(o.t)), 'pref ' + x.pref);
+  assert.deepEqual(r.asks.filter(a => a.pri !== 'later').map(a => a.key), [], 'case leaves no open questions');
+  if (x.ibcg !== undefined) assert.equal(r.ibcg.n, x.ibcg);
+  if (x.fail) assert.equal(NB.bcgFail(c.fail).id, x.fail);
+}));
+t('all EAU groups are represented in the cases', () => { const g = new Set(CASES.map(c => c.expect.eau)); ['low', 'int', 'high', 'vhigh'].forEach(x => assert.ok(g.has(x), x)); });
+t('20 questions, 10 basic + 10 advanced, unique ids', () => { assert.equal(QUIZ.length, 20); assert.equal(QUIZ.filter(q => q.lv === '基礎').length, 10); assert.equal(QUIZ.filter(q => q.lv === '高階').length, 10); assert.equal(new Set(QUIZ.map(q => q.id)).size, 20); });
+t('answers spread A–D 5 each, four distinct options, explanation and source present', () => {
+  const n = [0, 0, 0, 0]; QUIZ.forEach(q => { n[q.a]++; assert.equal(q.o.length, 4, q.id); assert.equal(new Set(q.o).size, 4, q.id); assert.ok(q.e && q.s, q.id); }); assert.deepEqual(n, [5, 5, 5, 5]);
+});
+t('correct option is not usually the longest', () => { const c = QUIZ.filter(q => q.o[q.a].length === Math.max(...q.o.map(x => x.length))).length; assert.ok(c <= 8, 'longest correct = ' + c); });
+QUIZ.filter(q => q.chk).forEach(q => t(`quiz ${q.id} answer agrees with engine`, () => {
+  const e = ev(q.chk.s).eau; if (q.chk.eau) assert.equal(e.id, q.chk.eau); if (q.chk.by) assert.deepEqual(e.by, q.chk.by);
+}));
+QUIZ.filter(q => q.chkFail).forEach(q => t(`quiz ${q.id} answer agrees with BCG classifier`, () => assert.equal(BF(q.chkFail.i).id, q.chkFail.id)));
+t('mind map has branches with content and no empty node', () => {
+  assert.ok(MINDMAP.length >= 6); const walk = n => { if (typeof n === 'string') return assert.ok(n.trim()); assert.ok(n.t && n.c && n.c.length, n.t); n.c.forEach(walk); }; MINDMAP.forEach(walk);
 });
 
 console.log(`\n${pass} passed, ${fail} failed`);
